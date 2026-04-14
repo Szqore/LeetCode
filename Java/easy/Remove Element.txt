@@ -1,0 +1,14 @@
+class Solution { //task 27
+    public int removeElement(int[] nums, int val) {
+        if (nums.length == 0 ) return 0 ;
+
+        int i = 0; // указатели неа место для слеюдщего 'хорошего' элемента
+        for (int j = 0; j < nums.length; j++) { 
+            if (nums [j] != val) {
+                nums [i] = nums[j];
+                i++;
+        }
+    }
+    return i; // количество элементов, не равных val
+    }
+}
