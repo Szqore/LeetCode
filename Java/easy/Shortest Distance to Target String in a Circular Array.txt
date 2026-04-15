@@ -1,0 +1,16 @@
+class Solution { //task 2515
+    public int closestTarget(String[] words, String target, int startIndex) {
+        int n = words.length;
+        int minDistance =  Integer.MAX_VALUE;
+
+        for (int i = 0; i < n; i++) {
+            if (words[i].equals(target)) {
+                // расстояние по кругу (минимальное из прямого и обратного пути)
+                int dist = Math.min(Math.abs(i - startIndex), n - Math.abs(i - startIndex));
+                minDistance = Math.min(minDistance, dist);
+
+       }
+    }
+    return minDistance != Integer.MAX_VALUE ? minDistance : -1;
+    }
+}
