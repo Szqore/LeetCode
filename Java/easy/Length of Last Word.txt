@@ -1,0 +1,19 @@
+class Solution {  // task 58
+    public int lengthOfLastWord(String s) {
+        int length = 0;
+        
+        // Идём с конца строки
+        for (int i = s.length() - 1; i >= 0; i--) {
+            // Если встретили пробел после того, как начали считать буквы
+            if (s.charAt(i) == ' ' && length > 0) {
+                break; // Дошли до конца последнего слова
+            }
+            // Если текущий символ не пробел, увеличиваем счётчик
+            if (s.charAt(i) != ' ') {
+                length++;
+            }
+        }
+        
+        return length;
+    }
+}
