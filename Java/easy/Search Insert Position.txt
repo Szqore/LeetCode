@@ -1,0 +1,19 @@
+class Solution { // task 35
+    public int searchInsert(int[] nums, int target) {
+        int left =0;
+        int right = nums.length -1;
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2; // Чтобы избежать перреполнения
+            if (nums[mid] == target) {
+                return mid; //Нашли target
+            } else if (nums[mid] < target) {
+                left = mid + 1; //ищем вправой половине
+            } else {
+                right = mid -1; // Ищем в левой половине
+            }      
+        }
+        //Если не нашли,left указывает на позицию для вставки 
+        return left;
+    }
+}
