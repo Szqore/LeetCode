@@ -1,0 +1,25 @@
+class Solution { //task 67
+    public String addBinary(String a, String b) {
+        StringBuilder result = new StringBuilder();
+        int i = a.length() -1; // указатель на конец строки a
+        int j = b.length() -1; // указатель на конец строки b
+        int carry = 0;
+
+        //Идем с конца обеих строк
+        while (i >= 0 || j >= 0 || carry > 0) {
+            int sum = carry;
+
+            if (i >= 0) {
+                sum += a.charAt(i) - '0'; // преобразуем char в int'
+                i--;
+            }
+            if (j >= 0) {
+                sum += b.charAt(j) - '0';
+                j--;
+            }
+            result.append (sum % 2); // текущий бит (0 или 1)
+            carry = sum / 2; // перенос на следующий разряд
+        }
+        return result.reverse().toString();  // переворачиваем результат
+    }
+}
