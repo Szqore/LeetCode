@@ -1,0 +1,29 @@
+import java.util.HashMap; //task 3761
+import java.util.Map;
+
+class Solution {
+    public int minMirrorPairDistance(int[] nums) { // Исправленное имя метода
+        int minDistance = Integer.MAX_VALUE; // Инициализируем минимум максимальным значением
+        Map<Integer, Integer> lastSeenReverse = new HashMap<>(); // Карта для хранения перевернутых чисел и их индексов
+
+        for (int j = 0; j < nums.length; j++) { // Итерируемся по массиву
+            if (lastSeenReverse.containsKey(nums[j])) { // Если текущее число уже встречалось как перевернутое
+                minDistance = Math.min(minDistance, j - lastSeenReverse.get(nums[j])); // Считаем дистанцию
+            }
+            
+            int rev = reverse(nums[j]); // Переворачиваем текущее число
+            lastSeenReverse.put(rev, j); // Сохраняем перевернутое число и текущий индекс
+        }
+
+        return minDistance == Integer.MAX_VALUE ? -1 : minDistance; // Возвращаем результат или -1
+    }
+
+    private int reverse(int n) { // Метод для разворота числа
+        int rev = 0; // Накопитель для развернутого числа
+        while (n > 0) { // Пока число больше нуля
+            rev = rev * 10 + n % 10; // Добавляем последнюю цифру в результат
+            n /= 10; // Убираем последнюю цифру
+        }
+        return rev; // Возвращаем перевернутое число
+    }
+}
