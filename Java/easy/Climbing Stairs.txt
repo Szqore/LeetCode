@@ -1,14 +1,15 @@
 class Solution { //task 70
     public int climbStairs(int n) {
+        if (n == 1) return 1;
         
-        int prev1 = 1; // dp[i-2] // количество способов для 1 ступеньки
-        int prev2 = 2; // dp[i-1] // количество способов для 2 ступенек
-
+        int prev1 = 1; // dp[i-2] для i=2 это dp[0] 
+        int prev2 = 2; // dp[i-1] для i=2 это dp[1]
+        
         for (int i = 3; i <= n; i++) {
-            int current = prev1 + prev2; // новые способы = сумма двух предыдущих
-            prev1 = prev2;  // сдвигаем: то что было prev2 становится prev1
-            prev2 = current; // новое число становится prev2
-    }
-    return prev2;
+            int current = prev1 + prev2;
+            prev1 = prev2;
+            prev2 = current;
+        }
+        return prev2;
     }
 }
