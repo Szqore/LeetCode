@@ -1,0 +1,10 @@
+class Solution { //task 464
+    public int islandPerimeter(int[][] grid) { // считаем периметр: +4 за землю, -2 за соседа сверху и слева
+    int p = 0;
+    for (int i = 0; i < grid.length; i++) 
+        for (int j = 0; j < grid[0].length; j++)
+        if (grid [i][j] == 1)
+            p += 4 - (i > 0 && grid [i-1] [j] == 1 ? 2 : 0) - (j > 0 && grid [i][j-1] == 1 ? 2 : 0 );
+            return p;
+    }
+}
