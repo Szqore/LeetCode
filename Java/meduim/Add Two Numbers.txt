@@ -1,0 +1,23 @@
+class Solution { //task 2
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(); // фиктивный узел для упрощения работы со списком
+        ListNode current = dummy;
+        int carry = 0;
+
+        while (l1 != null || l2 != null || carry !=0) { // пока есть узлы или перенос
+            int val1 = (l1 != null) ? l1.val : 0; // значение из первого списка или 0
+            int val2 = (l2 != null) ? l2.val : 0; // значение из второго списка или 0 
+
+            int total = val1 + val2 + carry; // сумма с учётом переноса
+            carry = total / 10; // новый перенос 
+            int digit = total % 10;
+
+            current.next = new ListNode(digit); // создаём новый узел с цифрой
+            current = current.next; // перемещаем указатель на новый узел
+
+            if (l1 != null) l1 = l1.next; // переходим к следующему узлу первого списка
+            if (l2 != null) l2 = l2.next;
+        }
+        return dummy.next; // возвращаем результат (первый реальный узел)
+    }
+}
