@@ -1,0 +1,29 @@
+import java.util.*;
+class Solution { //task 2033
+    public int minOperations(int[][] grid, int x) {
+         // Шаг 1: собираем все числа в один список
+         List<Integer> nums = new ArrayList<>();
+         for (int[] row : grid) {
+            for (int val : row) {
+                nums.add(val);
+            }
+         }
+         // Шаг 2: сортируем
+         Collections.sort(nums);
+         int n = nums.size();
+
+           // Шаг 3: берём медиану (центральный элемент)
+           int median = nums.get (n/2);
+
+           // Шаг 4: считаем количество операций
+           int operations =0;
+           for (int num : nums) {
+            int diff = Math.abs (num - median);
+            if (diff % x != 0) {
+                return -1; // нельзя сделать все числа равными
+            }
+            operations += diff / x;
+           }
+           return operations;      
+    }
+}
