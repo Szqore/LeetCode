@@ -1,0 +1,41 @@
+//task 205
+import java.util.HashMap;
+import java.util.Map;
+
+class Solution {
+    public boolean isIsomorphic(String s, String t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+        
+        // Карта для отображения символов из s -> t
+        Map<Character, Character> mapST = new HashMap<>();
+        // Карта для отображения символов из t -> s (проверка на уникальность отображения)
+        Map<Character, Character> mapTS = new HashMap<>();
+        
+        for (int i = 0; i < s.length(); i++) {
+            char charS = s.charAt(i);
+            char charT = t.charAt(i);
+            
+            // Проверяем отображение s -> t
+            if (mapST.containsKey(charS)) {
+                if (mapST.get(charS) != charT) {
+                    return false; // символ s уже отображается на другой символ
+                }
+            } else {
+                mapST.put(charS, charT);
+            }
+            
+            // Проверяем отображение t -> s (уникальность)
+            if (mapTS.containsKey(charT)) {
+                if (mapTS.get(charT) != charS) {
+                    return false; // символ t уже отображается на другой символ
+                }
+            } else {
+                mapTS.put(charT, charS);
+            }
+        }
+        
+        return true;
+    }
+}
