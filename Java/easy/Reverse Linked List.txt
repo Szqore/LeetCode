@@ -1,0 +1,26 @@
+/** task 206
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */ 
+class Solution {
+    // Итеративное решение
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;      // предыдущий узел
+        ListNode current = head;   // текущий узел
+        
+        while (current != null) {
+            ListNode nextTemp = current.next; // сохраняем следующий узел
+            current.next = prev;              // разворачиваем ссылку
+            prev = current;                   // двигаем prev вперёд
+            current = nextTemp;               // двигаем current вперёд
+        }
+        
+        return prev; // новая голова развёрнутого списка
+    }
+}
