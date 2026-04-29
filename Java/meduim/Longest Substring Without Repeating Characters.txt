@@ -1,0 +1,28 @@
+import java.util.HashSet; //task 3 
+import java.util.Set;
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        Set<Character> set = new HashSet<>();
+        int left = 0;
+        int maxLength = 0;
+        
+        for (int right = 0; right < s.length(); right++) {
+            char currentChar = s.charAt(right);
+            
+            // Если символ уже есть в окне, двигаем левую границу
+            while (set.contains(currentChar)) {
+                set.remove(s.charAt(left));
+                left++;
+            }
+            
+            // Добавляем текущий символ в окно
+            set.add(currentChar);
+            
+            // Обновляем максимальную длину
+            maxLength = Math.max(maxLength, right - left + 1);
+        }
+        
+        return maxLength;
+    }
+}
