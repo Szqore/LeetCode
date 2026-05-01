@@ -1,0 +1,27 @@
+class Solution { //task 396
+    public int maxRotateFunction(int[] nums) {
+        int n = nums.length;
+        
+        // Сумма всех элементов массива
+        int sum = 0;
+        // Вычисляем F(0)
+        int f = 0;
+        for (int i = 0; i < n; i++) {
+            sum += nums[i];
+            f += i * nums[i];
+        }
+        
+        int max = f;
+        
+        // Используем формулу перехода: 
+        // F(k) = F(k-1) + sum - n * nums[n-k]
+        for (int k = 1; k < n; k++) {
+            f = f + sum - n * nums[n - k];
+            if (f > max) {
+                max = f;
+            }
+        }
+        
+        return max;
+    }
+}
