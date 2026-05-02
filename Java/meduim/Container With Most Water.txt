@@ -1,0 +1,26 @@
+class Solution { //task 11
+    public int maxArea(int[] height) {
+        int left = 0;
+        int right = height.length - 1;
+        int maxWater = 0;
+        
+        while (left < right) {
+            // Вычисляем текущую площадь
+            int currentHeight = Math.min(height[left], height[right]);
+            int width = right - left;
+            int currentWater = currentHeight * width;
+            
+            // Обновляем максимум
+            maxWater = Math.max(maxWater, currentWater);
+            
+            // Двигаем указатель с меньшей высотой
+            if (height[left] < height[right]) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        
+        return maxWater;
+    }
+}
