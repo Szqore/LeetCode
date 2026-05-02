@@ -1,0 +1,46 @@
+import java.util.*;
+
+class Solution { //task 241
+    public List<Integer> diffWaysToCompute(String expression) {
+        return compute(expression);
+    }
+    
+    private List<Integer> compute(String expr) {
+        List<Integer> result = new ArrayList<>();
+        
+        for (int i = 0; i < expr.length(); i++) {
+            char c = expr.charAt(i);
+            
+            // Если текущий символ — оператор
+            if (c == '+' || c == '-' || c == '*') {
+                // Разбиваем на левую и правую части
+                String leftExpr = expr.substring(0, i);
+                String rightExpr = expr.substring(i + 1);
+                
+                // Рекурсивно получаем все результаты для левой и правой частей
+                List<Integer> leftResults = compute(leftExpr);
+                List<Integer> rightResults = compute(rightExpr);
+                
+                // Комбинируем результаты
+                for (int left : leftResults) {
+                    for (int right : rightResults) {
+                        if (c == '+') {
+                            result.add(left + right);
+                        } else if (c == '-') {
+                            result.add(left - right);
+                        } else if (c == '*') {
+                            result.add(left * right);
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Если операторов не было — это число
+        if (result.isEmpty()) {
+            result.add(Integer.parseInt(expr));
+        }
+        
+        return result;
+    }
+}
