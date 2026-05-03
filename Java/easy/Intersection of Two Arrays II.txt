@@ -1,0 +1,35 @@
+import java.util.*;
+
+class Solution { //task 350
+    public int[] intersect(int[] nums1, int[] nums2) {
+        // Используем меньший массив для построения карты (оптимизация)
+        if (nums1.length > nums2.length) {
+            return intersect(nums2, nums1);
+        }
+        
+        Map<Integer, Integer> countMap = new HashMap<>();
+        
+        // Подсчитываем частоты элементов в меньшем массиве
+        for (int num : nums1) {
+            countMap.put(num, countMap.getOrDefault(num, 0) + 1);
+        }
+        
+        List<Integer> result = new ArrayList<>();
+        
+        // Проходим по второму массиву
+        for (int num : nums2) {
+            if (countMap.containsKey(num) && countMap.get(num) > 0) {
+                result.add(num);
+                countMap.put(num, countMap.get(num) - 1);
+            }
+        }
+        
+        // Преобразуем список в массив
+        int[] resultArray = new int[result.size()];
+        for (int i = 0; i < result.size(); i++) {
+            resultArray[i] = result.get(i);
+        }
+        
+        return resultArray;
+    }
+}
