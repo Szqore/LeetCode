@@ -1,0 +1,12 @@
+class Solution { //task 796
+    public boolean rotateString(String s, String goal) {
+        // Если длины разные то вращение невозможно
+        if (s.length() != goal.length()) {
+            return false;
+        }
+        
+        // Конкатенируем s с собой и проверяем, содержит ли goal
+        String doubled = s + s;
+        return doubled.contains(goal);
+    }
+}
