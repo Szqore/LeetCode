@@ -1,0 +1,42 @@
+class Solution { //task 17
+    // Маппинг цифр на буквы (как на кнопках телефона)
+    private final String[] mapping = {
+        "",     // 0
+        "",     // 1
+        "abc",  // 2
+        "def",  // 3
+        "ghi",  // 4
+        "jkl",  // 5
+        "mno",  // 6
+        "pqrs", // 7
+        "tuv",  // 8
+        "wxyz"  // 9
+    };
+    
+    public List<String> letterCombinations(String digits) {
+        List<String> result = new ArrayList<>();
+        // Пустая строка — пустой результат
+        if (digits == null || digits.length() == 0) return result;
+        
+        // Запускаем рекурсивный бэктрекинг
+        backtrack(result, new StringBuilder(), digits, 0);
+        return result;
+    }
+    
+    private void backtrack(List<String> result, StringBuilder current, String digits, int index) {
+        // Если дошли до конца — добавляем комбинацию
+        if (index == digits.length()) {
+            result.add(current.toString());
+            return;
+        }
+        
+        // Получаем буквы для текущей цифры
+        String letters = mapping[digits.charAt(index) - '0'];
+        // Перебираем все варианты для этой позиции
+        for (char c : letters.toCharArray()) {
+            current.append(c);                  // Выбираем букву
+            backtrack(result, current, digits, index + 1); // Рекурсия для следующей цифры
+            current.deleteCharAt(current.length() - 1);   // Откатываем (бэктрекинг)
+        }
+    }
+}
