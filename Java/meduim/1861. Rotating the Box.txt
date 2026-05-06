@@ -1,0 +1,33 @@
+class Solution { //task 1861
+    public char[][] rotateTheBox(char[][] box) {
+        int rows = box.length;      // количество строк
+        int cols = box[0].length;   // количество столбцов
+        
+        //Поворачиваем коробку на 90 градусов по часовой стрелке
+        char[][] rotated = new char[cols][rows];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                rotated[j][rows - 1 - i] = box[i][j];
+            }
+        }
+        
+        //Падаем камнями вниз работаем с каждым столбцом
+        for (int col = 0; col < rows; col++) {           // по столбцам
+            int lowestEmpty = rotated.length - 1;        // самая нижняя пустая клетка
+            
+            for (int row = rotated.length - 1; row >= 0; row--) {  // снизу вверх
+                if (rotated[row][col] == '#') {          // нашли камень
+                    // меняем местами с самой нижней пустой клеткой
+                    rotated[row][col] = '.';
+                    rotated[lowestEmpty][col] = '#';
+                    lowestEmpty--;                       // сдвигаем указатель вверх
+                } 
+                else if (rotated[row][col] == '*') {     // нашли стену
+                    lowestEmpty = row - 1;               // камни падают выше стены
+                }
+            }
+        }
+        
+        return rotated;
+    }
+}
