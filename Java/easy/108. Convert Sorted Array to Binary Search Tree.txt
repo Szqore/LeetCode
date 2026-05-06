@@ -1,0 +1,32 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution { //task 108
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return buildBST(nums, 0, nums.length - 1); // Запускаем рекурсивное построение дерева
+    }
+    
+    private TreeNode buildBST(int[] nums, int left, int right) {
+        if (left > right) return null; // Базовый случай: пустой диапазон
+        
+        int mid = left + (right - left) / 2; // Находим середину (корень поддерева)
+        TreeNode node = new TreeNode(nums[mid]); // Создаём узел из среднего элемента
+        
+        node.left = buildBST(nums, left, mid - 1); // Рекурсивно строим левое поддерево
+        node.right = buildBST(nums, mid + 1, right); // Рекурсивно строим правое поддерево
+        
+        return node; // Возвращаем построенное поддерево
+    }
+}
