@@ -1,0 +1,23 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode dummy = new ListNode(0, head); // Создаём фиктивный узел для упрощения граничных случаев
+        ListNode fast = dummy, slow = dummy;    // Быстрый и медленный указатели стартуют с dummy
+        for (int i = 0; i <= n; i++) fast = fast.next; // Сдвигаем быстрый на n+1 шагов вперёд
+        while (fast != null) { // Пока быстрый не дошёл до конца
+            fast = fast.next;  // Двигаем оба указателя
+            slow = slow.next;  // Медленный остановится перед удаляемым узлом
+        }
+        slow.next = slow.next.next; // Удаляем N-й узел с конца
+        return dummy.next; // Возвращаем голову списка (игнорируя dummy)
+    }
+}
