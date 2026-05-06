@@ -8,7 +8,7 @@
  *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
-class Solution {
+class Solution { //task 19
     public ListNode removeNthFromEnd(ListNode head, int n) {
         ListNode dummy = new ListNode(0, head); // Создаём фиктивный узел для упрощения граничных случаев
         ListNode fast = dummy, slow = dummy;    // Быстрый и медленный указатели стартуют с dummy
