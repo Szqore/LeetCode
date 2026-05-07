@@ -1,0 +1,35 @@
+import java.util.ArrayList;
+import java.util.List;
+//task 118
+class Solution { 
+    public List<List<Integer>> generate(int numRows) {
+        // Инициализируем результирующий список списков
+        List<List<Integer>> triangle = new ArrayList<>();
+
+        // Если количество строк 0, возвращаем пустой список
+        if (numRows == 0) return triangle;
+
+        // Внешний цикл проходит по каждой строке от 0 до numRows - 1
+        for (int i = 0; i < numRows; i++) {
+            List<Integer> row = new ArrayList<>();
+
+            // Внутренний цикл формирует элементы текущей строки i
+            for (int j = 0; j <= i; j++) {
+                // Первый (j=0) и последний (j=i) элементы строки всегда равны 1
+                if (j == 0 || j == i) {
+                    row.add(1);
+                } else {
+                    // Остальные элементы — это сумма двух чисел над ними из предыдущей строки
+                    // Предыдущая строка находится по индексу i - 1
+                    int leftVal = triangle.get(i - 1).get(j - 1);
+                    int rightVal = triangle.get(i - 1).get(j);
+                    row.add(leftVal + rightVal);
+                }
+            }
+            // Добавляем готовую строку в треугольник
+            triangle.add(row);
+        }
+
+        return triangle;
+    }
+}
