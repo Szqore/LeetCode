@@ -1,0 +1,37 @@
+class Solution { //task 3660
+    public int[] maxValue(int[] nums) {
+        int n = nums.length;
+        int[] ans = new int[n];
+        int[] preMax = new int[n];
+        int[] sufMin = new int[n];
+
+        // 1. Считаем префиксные максимумы
+        preMax[0] = nums[0];
+        for (int i = 1; i < n; i++) preMax[i] = Math.max(preMax[i - 1], nums[i]);
+
+        // 2. Считаем суффиксные минимумы
+        sufMin[n - 1] = nums[n - 1];
+        for (int i = n - 2; i >= 0; i--) sufMin[i] = Math.min(sufMin[i + 1], nums[i]);
+
+        // 3. Разбиваем на компоненты по "стенам" (где preMax[i] <= sufMin[i+1])
+        int start = 0;
+        for (int i = 0; i < n; i++) {
+            // Если это последний элемент или мы встретили "стену", через которую нельзя прыгнуть
+            if (i == n - 1 || preMax[i] <= sufMin[i + 1]) {
+                // Находим максимум в текущей группе
+                int currentMax = 0;
+                for (int k = start; k <= i; k++) {
+                    currentMax = Math.max(currentMax, nums[k]);
+                }
+                // Присваиваем этот максимум всем элементам группы
+                for (int k = start; k <= i; k++) {
+                    ans[k] = currentMax;
+                }
+                // Начинаем новую группу
+                start = i + 1;
+            }
+        }
+        
+        return ans;
+    }
+}
