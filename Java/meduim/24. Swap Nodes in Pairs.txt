@@ -1,0 +1,43 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution { //task 24
+    public ListNode swapPairs(ListNode head) {
+        // Создаем фиктивный узел (dummy node), который указывает на голову.
+        // Это помогает, если нужно поменять местами первые два узла.
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        
+        // Указатель 'prev' всегда указывает на узел ПЕРЕД парой, которую меняем.
+        ListNode prev = dummy;
+        
+        // Пока есть пара узлов для обмена
+        while (prev.next != null && prev.next.next != null) {
+            // Определяем узлы для обмена
+            ListNode first = prev.next;
+            ListNode second = prev.next.next;
+            
+            // --- Сам процесс обмена ---
+            // Узел 'first' теперь указывает на узел после 'second'
+            first.next = second.next;
+            // Узел 'second' теперь указывает на 'first'
+            second.next = first;
+            // Узел 'prev' теперь указывает на 'second'
+            prev.next = second;
+            
+            // --- Передвигаем 'prev' для следующей пары ---
+            // Теперь пара swapped: prev -> second -> first
+            // Передвигаем prev на 'first' (теперь это второй узел в паре)
+            prev = first;
+        }
+        
+        return dummy.next; // Возвращаем новую голову
+    }
+}
