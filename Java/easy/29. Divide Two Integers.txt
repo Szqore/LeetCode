@@ -1,0 +1,34 @@
+class Solution { //task 29
+    public int divide(int dividend, int divisor) {
+        if (dividend == Integer.MIN_VALUE && divisor == -1) {
+            return Integer.MAX_VALUE;
+        }
+
+        // Определяем знак результата (true, если результат будет отрицательным)
+        boolean isNegative = (dividend < 0) ^ (divisor < 0);
+
+        // Используем long, чтобы избежать переполнения при взятии Math.abs
+        long dvd = Math.abs((long) dividend);
+        long dvs = Math.abs((long) divisor);
+
+        int result = 0;
+
+        // Основной цикл: пока делимое больше или равно делителю
+        while (dvd >= dvs) {
+            long temp = dvs;
+            long multiple = 1;
+
+            // Удваиваем делитель сдвигом влево (temp * 2), пока он меньше делимого
+            while (dvd >= (temp << 1)) {
+                temp <<= 1;
+                multiple <<= 1;
+            }
+
+            // Вычитаем найденное кратное и добавляем количество в результат
+            dvd -= temp;
+            result += multiple;
+        }
+
+        return isNegative ? -result : result;
+    }
+}
