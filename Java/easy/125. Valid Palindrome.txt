@@ -1,0 +1,28 @@
+class Solution {  //task 125
+    public boolean isPalindrome(String s) {
+        // Указатели на начало и конец строки
+        int left = 0;
+        int right = s.length() - 1;
+
+        while (left < right) {
+            // Пропускаем символы слева, которые не являются буквами или цифрами
+            if (!Character.isLetterOrDigit(s.charAt(left))) {
+                left++;
+            } 
+            // Пропускаем символы справа, которые не являются буквами или цифрами
+            else if (!Character.isLetterOrDigit(s.charAt(right))) {
+                right--;
+            } 
+            // Сравниваем символы, приведя их к нижнему регистру
+            else {
+                if (Character.toLowerCase(s.charAt(left)) != Character.toLowerCase(s.charAt(right))) {
+                    return false;
+                }
+                left++;
+                right--;
+            }
+        }
+
+        return true;
+    }
+}
