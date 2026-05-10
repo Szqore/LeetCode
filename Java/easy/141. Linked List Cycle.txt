@@ -1,0 +1,35 @@
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution { //task 141
+    public boolean hasCycle(ListNode head) {
+        // Если список пуст или в нем всего один элемент, цикла быть не может
+        if (head == null || head.next == null) {
+            return false;
+        }
+
+        ListNode slow = head; // "Черепаха" (медленный указатель)
+        ListNode fast = head; // "Заяц" (быстрый указатель)
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;          // Делает 1 шаг
+            fast = fast.next.next;     // Делает 2 шага
+
+            // Если указатели встретились — в списке есть цикл
+            if (slow == fast) {
+                return true;
+            }
+        }
+
+        // Если "заяц" дошел до конца (null), значит цикла нет
+        return false;
+    }
+}
