@@ -1,0 +1,39 @@
+import java.util.ArrayList;
+import java.util.List;
+//task 145
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        // Вызов рекурсивной функции
+        traverse(root, result);
+        return result;
+    }
+    
+    private void traverse(TreeNode node, List<Integer> result) {
+        if (node == null) {
+            return;
+        }
+        
+        // 1. Левое поддерево
+        traverse(node.left, result);
+        // 2. Правое поддерево
+        traverse(node.right, result);
+        // 3. Корень
+        result.add(node.val);
+    }
+}
