@@ -1,0 +1,23 @@
+class Solution { //task 168
+    public String convertToTitle(int columnNumber) {
+        StringBuilder result = new StringBuilder();
+        
+        while (columnNumber > 0) {
+            // Уменьшаем на 1 для приведения к 0-25 (A=0, Z=25)
+            columnNumber--;
+            
+            // Получаем остаток от деления на 26
+            int remainder = columnNumber % 26;
+            
+            // Преобразуем остаток в символ (A=65 в ASCII)
+            char c = (char) ('A' + remainder);
+            result.append(c);
+            
+            // Переходим к следующему разряду
+            columnNumber /= 26;
+        }
+        
+        // Разворачиваем, так как символы добавлялись с конца
+        return result.reverse().toString();
+    }
+}
