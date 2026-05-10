@@ -1,0 +1,21 @@
+public class Solution { //task 160
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if (headA == null || headB == null) return null;
+
+        ListNode a = headA;
+        ListNode b = headB;
+
+        // Пока указатели не встретятся
+        while (a != b) {
+            // Если дошли до конца списка A, переходим в начало списка B
+            // В противном случае просто идем к следующему узлу
+            a = (a == null) ? headB : a.next;
+            
+            // Если дошли до конца списка B, переходим в начало списка A
+            b = (b == null) ? headA : b.next;
+        }
+
+        // Вернет либо узел пересечения, либо null (если пересечения нет)
+        return a;
+    }
+}
