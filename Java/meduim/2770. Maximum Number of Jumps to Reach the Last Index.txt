@@ -1,0 +1,26 @@
+class Solution { //task 2770
+    public int maximumJumps(int[] nums, int target) {
+        int n = nums.length;
+        // Инициализируем dp массивом -1 (unreachable)
+        int[] dp = new int[n];
+        java.util.Arrays.fill(dp, -1);
+        
+        // Базовый случай: на старте прыжков 0
+        dp[0] = 0;
+        
+        // Заполняем dp
+        for (int i = 0; i < n; i++) {
+            // Если текущая позиция недостижима, пропускаем
+            if (dp[i] == -1) continue;
+            
+            for (int j = i + 1; j < n; j++) {
+                // Проверяем условие прыжка: abs(nums[j] - nums[i]) <= target
+                if (Math.abs(nums[j] - nums[i]) <= target) {
+                    dp[j] = Math.max(dp[j], dp[i] + 1);
+                }
+            }
+        }
+        
+        return dp[n - 1];
+    }
+}
