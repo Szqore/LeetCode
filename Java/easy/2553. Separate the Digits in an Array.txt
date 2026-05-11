@@ -1,0 +1,26 @@
+import java.util.ArrayList;
+import java.util.List;
+//task 2553
+class Solution {
+    public int[] separateDigits(int[] nums) {
+        List<Integer> list = new ArrayList<>();
+        
+        // Проходим по каждому числу
+        for (int num : nums) {
+            // Преобразуем число в строку, чтобы получить цифры
+            String s = Integer.toString(num);
+            for (char c : s.toCharArray()) {
+                // Преобразуем символ обратно в цифру
+                list.add(c - '0');
+            }
+        }
+        
+        // Преобразуем List<Integer> в int[]
+        int[] result = new int[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            result[i] = list.get(i);
+        }
+        
+        return result;
+    }
+}
