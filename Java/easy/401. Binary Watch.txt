@@ -1,0 +1,21 @@
+import java.util.ArrayList;
+import java.util.List;
+//task 401
+class Solution {
+    public List<String> readBinaryWatch(int turnedOn) {
+        List<String> times = new ArrayList<>();
+        
+        // Перебираем часы (от 0 до 11) и минуты (от 0 до 59)
+        for (int h = 0; h < 12; h++) {
+            for (int m = 0; m < 60; m++) {
+                // Integer.bitCount подсчитывает количество установленных бит (единиц)
+                if (Integer.bitCount(h) + Integer.bitCount(m) == turnedOn) {
+                    // Форматируем строку: часы без ведущего нуля, минуты с двумя цифрами
+                    times.add(String.format("%d:%02d", h, m));
+                }
+            }
+        }
+        
+        return times;
+    }
+}
