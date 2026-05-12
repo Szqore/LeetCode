@@ -1,0 +1,26 @@
+import java.util.HashSet;
+import java.util.Set;
+//task 219
+class Solution {
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        // Сет хранит элементы текущего "окна" размером k
+        Set<Integer> window = new HashSet<>();
+        
+        for (int i = 0; i < nums.length; i++) {
+            // Если такой элемент уже есть в окне — условие выполнено
+            if (window.contains(nums[i])) {
+                return true;
+            }
+            
+            // Добавляем текущий элемент в сет
+            window.add(nums[i]);
+            
+            // Если размер окна превысил k, удаляем самый старый элемент
+            if (window.size() > k) {
+                window.remove(nums[i - k]);
+            }
+        }
+        
+        return false;
+    }
+}
