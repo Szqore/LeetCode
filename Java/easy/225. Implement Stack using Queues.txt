@@ -1,0 +1,32 @@
+import java.util.LinkedList;
+import java.util.Queue;
+//task 225
+class MyStack {
+    private Queue<Integer> q1 = new LinkedList<>();
+    private Queue<Integer> q2 = new LinkedList<>();
+
+    public void push(int x) {
+        // Добавляем элемент во вторую очередь
+        q2.add(x);
+        // Переносим все элементы из первой очереди во вторую
+        while (!q1.isEmpty()) {
+            q2.add(q1.poll());
+        }
+        // Меняем очереди местами, чтобы q1 всегда содержала элементы в порядке стека
+        Queue<Integer> temp = q1;
+        q1 = q2;
+        q2 = temp;
+    }
+
+    public int pop() {
+        return q1.poll(); // q1 теперь ведет себя как стек
+    }
+
+    public int top() {
+        return q1.peek();
+    }
+
+    public boolean empty() {
+        return q1.isEmpty();
+    }
+}
