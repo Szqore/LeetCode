@@ -1,0 +1,20 @@
+import java.util.HashSet;
+import java.util.Set;
+//task 217
+class Solution {
+    public boolean containsDuplicate(int[] nums) {
+        // Создаем HashSet для хранения уникальных чисел
+        Set<Integer> set = new HashSet<>();
+        
+        for (int num : nums) {
+            // Если элемент уже есть в наборе, значит нашли дубликат
+            if (set.contains(num)) {
+                return true;
+            }
+            // Добавляем новый элемент
+            set.add(num);
+        }
+        // Дубликатов не найдено
+        return false;
+    }
+}
