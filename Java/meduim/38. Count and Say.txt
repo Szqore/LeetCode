@@ -1,0 +1,29 @@
+class Solution {
+    public String countAndSay(int n) {
+        if (n <= 0) return "";
+        //task 38
+        // Базовый случай для n = 1
+        String res = "1";
+        
+        // Генерируем последовательность до n
+        for (int i = 1; i < n; i++) {
+            StringBuilder sb = new StringBuilder();
+            char[] c = res.toCharArray();
+            
+            // Проходим по текущей строке
+            for (int j = 0; j < c.length; j++) {
+                int count = 1;
+                // Считаем подряд идущие одинаковые цифры
+                while (j + 1 < c.length && c[j] == c[j + 1]) {
+                    count++;
+                    j++;
+                }
+                // Добавляем: количество + цифра
+                sb.append(count).append(c[j]);
+            }
+            res = sb.toString();
+        }
+        
+        return res;
+    }
+}
