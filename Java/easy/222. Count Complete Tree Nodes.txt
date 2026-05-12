@@ -1,0 +1,26 @@
+class Solution {
+    public int countNodes(TreeNode root) {
+        if (root == null) return 0;
+//task 222
+        int leftHeight = getHeight(root.left);
+        int rightHeight = getHeight(root.right);
+
+        // Если высоты равны, левое поддерево - идеальное полное дерево
+        if (leftHeight == rightHeight) {
+            // 1 (корень) + (2^leftHeight - 1) (левое) + рекурсия для правого
+            return (1 << leftHeight) + countNodes(root.right);
+        } else {
+            // Если высоты не равны, правое поддерево - идеальное (но на 1 уровень меньше)
+            return (1 << rightHeight) + countNodes(root.left);
+        }
+    }
+
+    private int getHeight(TreeNode node) {
+        int height = 0;
+        while (node != null) {
+            height++;
+            node = node.left;
+        }
+        return height;
+    }
+}
