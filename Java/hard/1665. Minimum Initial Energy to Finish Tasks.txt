@@ -1,0 +1,27 @@
+import java.util.Arrays;
+//task 1665
+class Solution {
+    public int minimumEffort(int[][] tasks) {
+        // Сортируем задачи по убыванию разницы (min - actual)
+        Arrays.sort(tasks, (a, b) -> (b[1] - b[0]) - (a[1] - a[0]));
+        
+        int initialEnergy = 0;
+        int currentEnergy = 0;
+        
+        for (int[] task : tasks) {
+            int actual = task[0];
+            int min = task[1];
+            
+            // Если текущей энергии не хватает, добавляем разницу
+            if (currentEnergy < min) {
+                initialEnergy += (min - currentEnergy);
+                currentEnergy = min;
+            }
+            
+            // Тратим энергию на задачу
+            currentEnergy -= actual;
+        }
+        
+        return initialEnergy;
+    }
+}
