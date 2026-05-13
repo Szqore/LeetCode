@@ -1,0 +1,32 @@
+class Solution { //task 234
+    public boolean isPalindrome(ListNode head) {
+        if (head == null || head.next == null) return true;
+        
+        // 1. Находим середину
+        ListNode slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        
+        // 2. Разворачиваем вторую половину
+        ListNode prev = null;
+        while (slow != null) {
+            ListNode nextTemp = slow.next;
+            slow.next = prev;
+            prev = slow;
+            slow = nextTemp;
+        }
+        
+        // 3. Сравниваем две половины
+        ListNode left = head;
+        ListNode right = prev; // начало развернутой половины
+        while (right != null) {
+            if (left.val != right.val) return false;
+            left = left.next;
+            right = right.next;
+        }
+        
+        return true;
+    }
+}
