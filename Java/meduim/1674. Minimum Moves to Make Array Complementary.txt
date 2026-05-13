@@ -1,0 +1,44 @@
+class Solution { //task 1674
+    public int minMoves(int[] nums, int limit) {
+        int n = nums.length;
+        // Максимальная возможная сумма - 2 * limit, 
+        // массив diff должен вмещать index 2*limit + 2
+        int[] diff = new int[2 * limit + 2];
+        
+        for (int i = 0; i < n / 2; ++i) {
+            int a = nums[i];
+            int b = nums[n - 1 - i];
+            
+            // Диапазоны сумм:
+            // 0 ходов: a + b
+            // 1 ход: [min(a,b) + 1, max(a,b) + limit]
+            // 2 хода: все остальные (2, 2*limit)
+            
+            int minSum = Math.min(a, b) + 1;
+            int maxSum = Math.max(a, b) + limit;
+            int sum = a + b;
+            
+            // Изначально считаем, что нужно 2 хода для всех сумм
+            diff[2] += 2;
+            diff[2 * limit + 1] -= 2;
+            
+            // Если делаем 1 ход, уменьшаем стоимость на 1
+            diff[minSum] -= 1;
+            diff[maxSum + 1] += 1;
+            
+            // Если 0 ходов (сумма уже равна sum), уменьшаем стоимость еще на 1
+            diff[sum] -= 1;
+            diff[sum + 1] += 1;
+        }
+        
+        int res = n;
+        int currentMoves = 0;
+        // Проходим по возможным суммам и ищем минимум
+        for (int i = 2; i <= 2 * limit; ++i) {
+            currentMoves += diff[i];
+            res = Math.min(res, currentMoves);
+        }
+        
+        return res;
+    }
+}
