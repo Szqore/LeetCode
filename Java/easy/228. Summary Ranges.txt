@@ -1,0 +1,32 @@
+import java.util.ArrayList;
+import java.util.List;
+//task 228
+class Solution {
+    public List<String> summaryRanges(int[] nums) {
+        List<String> result = new ArrayList<>();
+        
+        // Обработка пустого массива
+        if (nums == null || nums.length == 0) {
+            return result;
+        }
+        
+        for (int i = 0; i < nums.length; i++) {
+            int start = nums[i];
+            
+            // Проверяем, продолжается ли диапазон
+            while (i + 1 < nums.length && nums[i + 1] == nums[i] + 1) {
+                i++;
+            }
+            int end = nums[i];
+            
+            // Формируем строку диапазона
+            if (start == end) {
+                result.add(String.valueOf(start));
+            } else {
+                result.add(start + "->" + end);
+            }
+        }
+        
+        return result;
+    }
+}
