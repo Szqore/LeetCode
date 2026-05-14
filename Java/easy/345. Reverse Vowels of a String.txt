@@ -1,0 +1,30 @@
+class Solution { //task 345
+    public String reverseVowels(String s) {
+        if (s == null || s.length() == 0) return s;
+        
+        char[] chars = s.toCharArray();
+        int left = 0;
+        int right = s.length() - 1;
+        String vowels = "aeiouAEIOU";
+        
+        while (left < right) {
+            // Перемещаем левый указатель, пока не найдем гласную
+            while (left < right && vowels.indexOf(chars[left]) == -1) {
+                left++;
+            }
+            // Перемещаем правый указатель, пока не найдем гласную
+            while (left < right && vowels.indexOf(chars[right]) == -1) {
+                right--;
+            }
+            // Меняем местами гласные
+            char temp = chars[left];
+            chars[left] = chars[right];
+            chars[right] = temp;
+            
+            left++;
+            right--;
+        }
+        
+        return new String(chars);
+    }
+}
