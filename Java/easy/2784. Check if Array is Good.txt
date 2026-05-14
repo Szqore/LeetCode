@@ -1,0 +1,24 @@
+class Solution { //task 2784
+    public boolean isGood(int[] nums) {
+        int n = nums.length - 1;
+        // Минимальный "хороший" массив — это [1, 1], его длина 2
+        if (n < 1) return false;
+
+        // Создаем массив для подсчета вхождений (по условию nums[i] <= 200)
+        int[] count = new int[201];
+        
+        for (int num : nums) {
+            // Если число выходит за рамки [1, n], массив не может быть base[n]
+            if (num > n || num < 1) return false;
+            count[num]++;
+        }
+
+        // Проверяем, что числа от 1 до n-1 встречаются по одному разу
+        for (int i = 1; i < n; i++) {
+            if (count[i] != 1) return false;
+        }
+
+        // Число n должно встретиться ровно 2 раза
+        return count[n] == 2;
+    }
+}
