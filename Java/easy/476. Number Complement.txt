@@ -1,0 +1,14 @@
+class Solution { //task 476
+    public int findComplement(int num) {
+        // Создаем маску, заполненную единицами той же длины, что и num
+        int mask = num;
+        mask |= mask >> 1;
+        mask |= mask >> 2;
+        mask |= mask >> 4;
+        mask |= mask >> 8;
+        mask |= mask >> 16;
+        
+        // Ксорим число с маской для инверсии битов
+        return num ^ mask;
+    }
+}
