@@ -1,0 +1,6 @@
+class Solution { //task 326
+    public boolean isPowerOfThree(int n) {
+        // Число должно быть строго больше 0 и делить 3^19 без остатка
+        return n > 0 && 1162261467 % n == 0;
+    }
+}
