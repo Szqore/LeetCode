@@ -1,0 +1,21 @@
+class Solution { //task 383
+    public boolean canConstruct(String ransomNote, String magazine) {
+        // Создаем массив для подсчета букв (26 английских букв)
+        int[] counts = new int[26];
+        
+        // Считаем количество букв в журнале
+        for (char c : magazine.toCharArray()) {
+            counts[c - 'a']++;
+        }
+        
+        // Проверяем, хватает ли букв для записки
+        for (char c : ransomNote.toCharArray()) {
+            if (--counts[c - 'a'] < 0) {
+                // Буква закончилась или ее не было
+                return false;
+            }
+        }
+        
+        return true;
+    }
+}
