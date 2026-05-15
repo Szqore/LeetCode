@@ -1,0 +1,32 @@
+class Solution { //task 153
+    public int findMin(int[] nums) {
+        int left = 0;
+        int right = nums.length - 1;
+
+        // Если массив не ротирован или ротирован n раз
+        if (nums[left] <= nums[right]) {
+            return nums[left];
+        }
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+
+            // Если mid элемент больше следующего, то следующий - минимум
+            if (mid < nums.length - 1 && nums[mid] > nums[mid + 1]) {
+                return nums[mid + 1];
+            }
+            // Если mid элемент меньше предыдущего, то он и есть минимум
+            if (mid > 0 && nums[mid] < nums[mid - 1]) {
+                return nums[mid];
+            }
+
+            // Решаем, в какую половину идти
+            if (nums[mid] > nums[right]) {
+                left = mid + 1; // Минимум справа
+            } else {
+                right = mid - 1; // Минимум слева
+            }
+        }
+        return -1;
+    }
+}
