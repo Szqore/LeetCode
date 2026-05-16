@@ -1,0 +1,38 @@
+public class Solution { //task 10
+    public boolean isMatch(String s, String p) {
+        int m = s.length();
+        int n = p.length();
+        
+        boolean[][] dp = new boolean[m + 1][n + 1];
+        dp[0][0] = true;
+
+        // Обработка шаблонов вида a*, a*b*, и т.д. при пустой строке
+        for (int j = 1; j <= n; j++) {
+            if (p.charAt(j - 1) == '*') {
+                dp[0][j] = dp[0][j - 2];
+            }
+        }
+
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                char sChar = s.charAt(i - 1);
+                char pChar = p.charAt(j - 1);
+
+                if (pChar == '.' || pChar == sChar) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else if (pChar == '*') {
+                    // Символ перед '*' может повторяться 0 раз
+                    dp[i][j] = dp[i][j - 2];
+                    
+                    char prevChar = p.charAt(j - 2);
+                    if (prevChar == '.' || prevChar == sChar) {
+                        // Повторяется 1 или более раз
+                        dp[i][j] = dp[i][j] || dp[i - 1][j];
+                    }
+                }
+            }
+        }
+
+        return dp[m][n];
+    }
+}
