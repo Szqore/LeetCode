@@ -1,0 +1,40 @@
+import java.util.LinkedList;
+import java.util.Queue;
+//task 1306
+public class Solution {
+    public boolean canReach(int[] arr, int start) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(start);
+        
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            
+            // Если нашли ноль, цель достигнута
+            if (arr[current] == 0) {
+                return true;
+            }
+            
+            // Если элемент отрицательный, значит мы здесь уже были
+            if (arr[current] < 0) {
+                continue;
+            }
+            
+            // Вычисляем возможные шаги
+            int forward = current + arr[current];
+            int backward = current - arr[current];
+            
+            // Помечаем текущий индекс как посещенный
+            arr[current] = -arr[current];
+            
+            // Добавляем в очередь валидные индексы
+            if (forward < arr.length) {
+                queue.add(forward);
+            }
+            if (backward >= 0) {
+                queue.add(backward);
+            }
+        }
+        
+        return false;
+    }
+}
