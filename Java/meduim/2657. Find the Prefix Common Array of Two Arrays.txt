@@ -1,0 +1,23 @@
+class Solution { //task 2657
+    public int[] findThePrefixCommonArray(int[] A, int[] B) {
+        int n = A.length;
+        int[] res = new int[n];
+        int[] count = new int[n + 1]; // Частотный массив для чисел 1..n
+        int common = 0;
+
+        for (int i = 0; i < n; i++) {
+            // Увеличиваем счетчик для элемента из массива A
+            if (++count[A[i]] == 2) {
+                common++;
+            }
+            // Увеличиваем счетчик для элемента из массива B
+            if (++count[B[i]] == 2) {
+                common++;
+            }
+            // Текущее количество общих элементов на префиксе i
+            res[i] = common;
+        }
+
+        return res;
+    }
+}
