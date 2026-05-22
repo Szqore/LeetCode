@@ -1,0 +1,34 @@
+import java.util.PriorityQueue;
+//task 23
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null || lists.length == 0) return null;
+
+        // Создаем Min-Heap для узлов
+        PriorityQueue<ListNode> minHeap = new PriorityQueue<>((a, b) -> a.val - b.val);
+
+        // Добавляем головы всех непустых списков в очередь
+        for (ListNode list : lists) {
+            if (list != null) {
+                minHeap.add(list);
+            }
+        }
+
+        // Создаем фиктивный узел (dummy) и указатель (current) для результирующего списка
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+
+        // Извлекаем минимальный элемент и добавляем следующий узел из того же списка в очередь
+        while (!minHeap.isEmpty()) {
+            ListNode smallestNode = minHeap.poll();
+            current.next = smallestNode;
+            current = current.next;
+
+            if (smallestNode.next != null) {
+                minHeap.add(smallestNode.next);
+            }
+        }
+
+        return dummy.next;
+    }
+}
