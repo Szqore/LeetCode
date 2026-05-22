@@ -1,34 +1,31 @@
-class Solution {
+class Solution { //task 33
     public int search(int[] nums, int target) {
-        int left = 0, right = nums.length - 1;
-        //task 33
+        int left = 0;
+        int right = nums.length - 1;
+
         while (left <= right) {
             int mid = left + (right - left) / 2;
-            
+
             if (nums[mid] == target) {
-                return mid;
+                return mid; // Элемент найден
             }
-            
-            // Проверяем, отсортирована ли левая половина
-            if (nums[left] <= nums[mid]) {
-                // Если target находится в левой отсортированной части
+
+            // Проверяем, какая половина отсортирована
+            if (nums[left] <= nums[mid]) { // Левая половина отсортирована
                 if (nums[left] <= target && target < nums[mid]) {
-                    right = mid - 1;
+                    right = mid - 1; // Ищем в левой половине
                 } else {
-                    left = mid + 1;
+                    left = mid + 1;  // Ищем в правой половине
                 }
-            } 
-            // Иначе отсортирована правая половина
-            else {
-                // Если target находится в правой отсортированной части
+            } else { // Правая половина отсортирована
                 if (nums[mid] < target && target <= nums[right]) {
-                    left = mid + 1;
+                    left = mid + 1;  // Ищем в правой половине
                 } else {
-                    right = mid - 1;
+                    right = mid - 1; // Ищем в левой половине
                 }
             }
         }
         
-        return -1; // Целевое значение не найдено
+        return -1; // Элемент не найден
     }
 }
