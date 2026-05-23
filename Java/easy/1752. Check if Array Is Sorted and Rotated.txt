@@ -1,0 +1,19 @@
+class Solution { //task 1752
+    public boolean check(int[] nums) {
+        int count = 0;
+        int n = nums.length;
+        
+        for (int i = 0; i < n; i++) {
+            // Используем остаток от деления (%), чтобы проверить переход от конца к началу массива
+            if (nums[i] > nums[(i + 1) % n]) {
+                count++;
+            }
+            // Если нарушений порядка больше одного, массив не является циклически отсортированным
+            if (count > 1) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+}
