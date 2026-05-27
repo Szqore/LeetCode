@@ -1,0 +1,32 @@
+class Solution { //task 3121
+    public int numberOfSpecialChars(String word) {
+        int[] firstUpper = new int[26];
+        int[] lastLower = new int[26];
+        
+        // Заполняем массивы начальными значениями
+        java.util.Arrays.fill(firstUpper, -1);
+        java.util.Arrays.fill(lastLower, -1);
+        
+        for (int i = 0; i < word.length(); i++) {
+            char ch = word.charAt(i);
+            if (Character.isLowerCase(ch)) {
+                lastLower[ch - 'a'] = i; // Запоминаем последний индекс маленькой буквы
+            } else {
+                int idx = ch - 'A';
+                if (firstUpper[idx] == -1) {
+                    firstUpper[idx] = i; // Запоминаем индекс ПЕРВОЙ большой буквы
+                }
+            }
+        }
+        
+        int count = 0;
+        for (int i = 0; i < 26; i++) {
+            // Условие: обе буквы существуют, и последняя строчная идет ДО первой заглавной
+            if (lastLower[i] != -1 && firstUpper[i] != -1 && lastLower[i] < firstUpper[i]) {
+                count++;
+            }
+        }
+        
+        return count;
+    }
+}
