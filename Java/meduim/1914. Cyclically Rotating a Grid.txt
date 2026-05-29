@@ -1,0 +1,34 @@
+import java.util.ArrayList;
+import java.util.List;
+//task 1914
+class Solution {
+    public int[][] rotateGrid(int[][] grid, int k) {
+            int m = grid.length;
+                    int n = grid[0].length; 
+                            
+                                    int top = 0, bottom = m - 1;
+                                            int left = 0, right = n - 1;
+                                                    
+                                                            while (top < bottom && left < right) {
+                                                                        List<Integer> layer = new ArrayList<>();
+                                                                                    for (int i = left; i < right; i++) layer.add(grid[top][i]);
+                                                                                                for (int i = top; i < bottom; i++) layer.add(grid[i][right]);
+                                                                                                            for (int i = right; i > left; i--) layer.add(grid[bottom][i]);
+                                                                                                                        for (int i = bottom; i > top; i--) layer.add(grid[i][left]);
+                                                                                                                                    
+                                                                                                                                                int len = layer.size();
+                                                                                                                                                            int shift = k % len;
+                                                                                                                                                                        
+                                                                                                                                                                                    int index = shift;
+                                                                                                                                                                                                for (int i = left; i < right; i++) { grid[top][i] = layer.get(index); index = (index + 1) % len; }
+                                                                                                                                                                                                            for (int i = top; i < bottom; i++) { grid[i][right] = layer.get(index); index = (index + 1) % len; }
+                                                                                                                                                                                                                        for (int i = right; i > left; i--) { grid[bottom][i] = layer.get(index); index = (index + 1) % len; }
+                                                                                                                                                                                                                                    for (int i = bottom; i > top; i--) { grid[i][left] = layer.get(index); index = (index + 1) % len; }
+                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                            top++; bottom--; left++; right--;
+                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                    return grid;
+                                                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                        
