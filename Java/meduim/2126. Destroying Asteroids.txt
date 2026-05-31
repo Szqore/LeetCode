@@ -1,0 +1,24 @@
+import java.util.Arrays;
+//task 2126
+class Solution {
+    public boolean asteroidsDestroyed(int mass, int[] asteroids) {
+        // Сортируем астероиды по возрастанию массы
+        Arrays.sort(asteroids);
+        
+        // Используем long для предотвращения переполнения int
+        long currentMass = mass;
+        
+        // Проверяем каждый астероид
+        for (int asteroid : asteroids) {
+            // Если планета меньше астероида, она будет уничтожена
+            if (currentMass < asteroid) {
+                return false;
+            }
+            // Иначе планета поглощает астероид и растет
+            currentMass += asteroid;
+        }
+        
+        // Все астероиды успешно уничтожены
+        return true;
+    }
+}
