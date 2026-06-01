@@ -1,0 +1,26 @@
+import java.util.Arrays;
+//task 2144
+class Solution {
+    public int minimumCost(int[] cost) {
+        // Сортируем массив по возрастанию
+        Arrays.sort(cost);
+        
+        int totalCost = 0;
+        int n = cost.length;
+        
+        // Идем с конца массива к началу
+        for (int i = n - 1; i >= 0; i--) {
+            // Добавляем стоимость первой конфеты в паре
+            totalCost += cost[i];
+            i--;
+            
+            // Если есть еще одна конфета, добавляем её стоимость
+            if (i >= 0) {
+                totalCost += cost[i];
+                i--; // Третью конфету (индекс i) пропускаем, она бесплатная
+            }
+        }
+        
+        return totalCost;
+    }
+}
