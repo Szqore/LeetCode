@@ -1,0 +1,28 @@
+public class Solution { //task 3633
+    public int earliestFinishTime(int[] landStartTime, int[] landDuration, int[] waterStartTime, int[] waterDuration) {
+        int n = landStartTime.length;
+        int m = waterStartTime.length;
+        
+        int minFinishTime = Integer.MAX_VALUE;
+
+        // Сценарий 1: Сначала Наземный (Land), затем Водный (Water)
+        for (int i = 0; i < n; i++) {
+            int landEndTime = landStartTime[i] + landDuration[i];
+            for (int j = 0; j < m; j++) {
+                int totalTime = Math.max(landEndTime, waterStartTime[j]) + waterDuration[j];
+                minFinishTime = Math.min(minFinishTime, totalTime);
+            }
+        }
+
+        // Сценарий 2: Сначала Водный (Water), затем Наземный (Land)
+        for (int j = 0; j < m; j++) {
+            int waterEndTime = waterStartTime[j] + waterDuration[j];
+            for (int i = 0; i < n; i++) {
+                int totalTime = Math.max(waterEndTime, landStartTime[i]) + landDuration[i];
+                minFinishTime = Math.min(minFinishTime, totalTime);
+            }
+        }
+
+        return minFinishTime;
+    }
+}
