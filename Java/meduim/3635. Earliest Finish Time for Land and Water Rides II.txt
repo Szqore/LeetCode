@@ -1,0 +1,36 @@
+class Solution { //task 3635
+    public int earliestFinishTime(int[] landStartTime, int[] landDuration, int[] waterStartTime, int[] waterDuration) {
+        // Случай 1: Сначала Land, затем Water
+        int case1 = calculate(landStartTime, landDuration, waterStartTime, waterDuration);
+        // Случай 2: Сначала Water, затем Land
+        int case2 = calculate(waterStartTime, waterDuration, landStartTime, landDuration);
+        
+        return Math.min(case1, case2);
+    }
+
+    private int calculate(int[] start1, int[] dur1, int[] start2, int[] dur2) {
+        // Шаг 1: Находим самое раннее время завершения первой поездки за O(N)
+        int minEnd1 = Integer.MAX_VALUE;
+        for (int i = 0; i < start1.length; i++) {
+            int end1 = start1[i] + dur1[i];
+            if (end1 < minEnd1) {
+                minEnd1 = end1;
+            }
+        }
+        
+        // Шаг 2: Находим наилучшее время завершения второй поездки за O(M)
+        int minTotalEnd = Integer.MAX_VALUE;
+        for (int j = 0; j < start2.length; j++) {
+            // Мы можем начать вторую поездку либо когда она откроется, 
+            // либо когда освободимся с первой (выбираем наибольшее)
+            int start2Time = Math.max(start2[j], minEnd1);
+            int currentEnd = start2Time + dur2[j];
+            
+            if (currentEnd < minTotalEnd) {
+                minTotalEnd = currentEnd;
+            }
+        }
+        
+        return minTotalEnd;
+    }
+}
