@@ -1,0 +1,42 @@
+class Solution { //task 3751
+    public int totalWaviness(int num1, int num2) {
+        int totalWaviness = 0;
+        
+        // Перебираем все числа в диапазоне [num1, num2]
+        for (int i = num1; i <= num2; i++) {
+            totalWaviness += calculateWaviness(i);
+        }
+        
+        return totalWaviness;
+    }
+
+    // Вспомогательный метод для подсчета волнообразности одного числа
+    private int calculateWaviness(int num) {
+        // Числа, у которых меньше 3 цифр, имеют волнообразность 0
+        if (num < 100) {
+            return 0;
+        }
+
+        // Переводим число в строку или массив цифр для удобного обхода
+        String s = Integer.toString(num);
+        int waviness = 0;
+
+        // Первый и последний символы не могут быть пиками или впадинами
+        for (int i = 1; i < s.length() - 1; i++) {
+            char prev = s.charAt(i - 1);
+            char curr = s.charAt(i);
+            char next = s.charAt(i + 1);
+
+            // Проверка на пик (строго больше соседей)
+            if (curr > prev && curr > next) {
+                waviness++;
+            }
+            // Проверка на впадину (строго меньше соседей)
+            else if (curr < prev && curr < next) {
+                waviness++;
+            }
+        }
+
+        return waviness;
+    }
+}
