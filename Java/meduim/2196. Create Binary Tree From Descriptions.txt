@@ -1,0 +1,46 @@
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+//task 2196
+class Solution {
+    public TreeNode createBinaryTree(int[][] descriptions) {
+        // Карта для хранения созданных узлов по их значению
+        Map<Integer, TreeNode> map = new HashMap<>();
+        // Множество всех узлов, у которых есть родитель
+        Set<Integer> children = new HashSet<>();
+
+        for (int[] desc : descriptions) {
+            int parentVal = desc[0];
+            int childVal = desc[1];
+            int isLeft = desc[2];
+
+            // Создаем или получаем родительский узел
+            map.putIfAbsent(parentVal, new TreeNode(parentVal));
+            // Создаем или получаем дочерний узел
+            map.putIfAbsent(childVal, new TreeNode(childVal));
+
+            TreeNode parent = map.get(parentVal);
+            TreeNode child = map.get(childVal);
+
+            // Связываем родителя и ребенка
+            if (isLeft == 1) {
+                parent.left = child;
+            } else {
+                parent.right = child;
+            }
+
+            // Добавляем ребенка во множество
+            children.add(childVal);
+        }
+
+        // Ищем корень: узел из map, которого нет во множестве детей
+        for (int val : map.keySet()) {
+            if (!children.contains(val)) {
+                return map.get(val);
+            }
+        }
+
+        return null;
+    }
+}
