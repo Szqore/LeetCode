@@ -1,0 +1,15 @@
+class Solution { //task 3689
+    public long maxTotalValue(int[] nums, int k) {
+        int maxVal = nums[0];
+        int minVal = nums[0];
+        
+        // Находим глобальный максимум и минимум в массиве
+        for (int num : nums) {
+            maxVal = Math.max(maxVal, num);
+            minVal = Math.min(minVal, num);
+        }
+        
+        // Перемножаем разность на k
+        return (long) k * (maxVal - minVal);
+    }
+}
