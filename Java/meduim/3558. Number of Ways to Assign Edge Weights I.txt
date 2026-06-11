@@ -1,0 +1,50 @@
+import java.util.*;
+//task 3558
+class Solution {
+    public int assignEdgeWeights(int[][] edges) {
+        // Количество узлов на 1 больше, чем количество ребер
+        int n = edges.length + 1;
+        
+        // Создаем список смежности для графа
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i <= n; i++) {
+            graph.add(new ArrayList<>());
+        }
+        
+        for (int[] edge : edges) {
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+        }
+        
+        // Находим максимальную глубину от корня (узел 1)
+        int maxDepth = getMaxDepth(graph, 1, 0, 0);
+        
+        if (maxDepth == 0) return 0;
+        
+        // Формула: 2^(maxDepth - 1) % (10^9 + 7)
+        return (int) power(2, maxDepth - 1, 1000000007);
+    }
+
+    // Поиск в глубину (DFS) для вычисления максимальной глубины
+    private int getMaxDepth(List<List<Integer>> graph, int node, int parent, int currentDepth) {
+        int max = currentDepth;
+        for (int neighbor : graph.get(node)) {
+            if (neighbor != parent) {
+                max = Math.max(max, getMaxDepth(graph, neighbor, node, currentDepth + 1));
+            }
+        }
+        return max;
+    }
+
+    // Быстрое возведение в степень по модулю
+    private long power(long base, long exp, long mod) {
+        long res = 1;
+        base %= mod;
+        while (exp > 0) {
+            if (exp % 2 == 1) res = (res * base) % mod;
+            base = (base * base) % mod;
+            exp /= 2;
+        }
+        return res;
+    }
+}
