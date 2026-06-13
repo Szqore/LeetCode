@@ -1,0 +1,27 @@
+class Solution { //task 3838
+    public String mapWordWeights(String[] words, int[] weights) {
+        StringBuilder result = new StringBuilder();
+        
+        for (String word : words) {
+            int totalWeight = 0;
+            
+            // Находим сумму весов всех букв в слове
+            for (int i = 0; i < word.length(); i++) {
+                char ch = word.charAt(i);
+                totalWeight += weights[ch - 'a'];
+            }
+            
+            // Получаем остаток от деления на 26
+            int remainder = totalWeight % 26;
+            
+            // Переводим остаток в символ в обратном алфавитном порядке
+            // 0 -> 'z', 1 -> 'y', ..., 25 -> 'a'
+            char mappedChar = (char) ('z' - remainder);
+            
+            // Добавляем символ к итоговому результату
+            result.append(mappedChar);
+        }
+        
+        return result.toString();
+    }
+}
