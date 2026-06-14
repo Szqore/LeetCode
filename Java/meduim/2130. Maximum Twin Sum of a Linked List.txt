@@ -1,0 +1,36 @@
+class Solution { //task 2130
+    public int pairSum(ListNode head) {
+        // Шаг 1: Находим середину списка с помощью двух указателей
+        ListNode slow = head;
+        ListNode fast = head;
+        
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        
+        // Шаг 2: Разворачиваем вторую половину списка
+        ListNode prev = null;
+        ListNode curr = slow;
+        
+        while (curr != null) {
+            ListNode nextTemp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nextTemp;
+        }
+        
+        // Шаг 3: Считаем максимальную сумму "близнецов"
+        int maxTwinSum = 0;
+        ListNode first = head;
+        ListNode second = prev; // Начало развернутой второй половины
+        
+        while (second != null) {
+            maxTwinSum = Math.max(maxTwinSum, first.val + second.val);
+            first = first.next;
+            second = second.next;
+        }
+        
+        return maxTwinSum;
+    }
+}
