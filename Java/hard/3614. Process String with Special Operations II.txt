@@ -1,0 +1,59 @@
+import java.math.BigInteger;
+//task 3614
+class Solution {
+    public char processStr(String s, long k) {
+        int n = s.length();
+        BigInteger[] lens = new BigInteger[n + 1];
+        lens[0] = BigInteger.ZERO;
+
+        // Шаг 1: Считаем длину строки после каждого символа
+        for (int i = 0; i < n; i++) {
+            char c = s.charAt(i);
+            if (Character.isLowerCase(c)) {
+                lens[i + 1] = lens[i].add(BigInteger.ONE);
+            } else if (c == '*') {
+                if (lens[i].compareTo(BigInteger.ZERO) > 0) {
+                    lens[i + 1] = lens[i].subtract(BigInteger.ONE);
+                } else {
+                    lens[i + 1] = BigInteger.ZERO;
+                }
+            } else if (c == '#') {
+                lens[i + 1] = lens[i].multiply(BigInteger.valueOf(2));
+            } else if (c == '%') {
+                lens[i + 1] = lens[i];
+            }
+        }
+
+        BigInteger target = BigInteger.valueOf(k);
+
+        // Если k выходит за пределы итоговой строки, возвращаем '.'
+        if (target.compareTo(lens[n]) >= 0) {
+            return '.';
+        }
+
+        // Шаг 2: Раскручиваем операции в обратном порядке
+        for (int i = n - 1; i >= 0; i--) {
+            char c = s.charAt(i);
+
+            if (Character.isLowerCase(c)) {
+                // Если target указывает на только что добавленный символ
+                if (target.equals(lens[i])) {
+                    return c;
+                }
+            } else if (c == '*') {
+                // Удаление символа с конца не меняет индексы оставшихся элементов
+                // Просто продолжаем поиск в строке меньшего размера
+            } else if (c == '#') {
+                // Если индекс находится во второй (продублированной) половине
+                if (target.compareTo(lens[i]) >= 0) {
+                    target = target.subtract(lens[i]);
+                }
+            } else if (c == '%') {
+                // Индекс зеркально отражается относительно длины строки до реверса
+                target = lens[i].subtract(BigInteger.ONE).subtract(target);
+            }
+        }
+
+        return '.';
+    }
+}
