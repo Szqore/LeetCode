@@ -1,0 +1,16 @@
+class Solution { //task 1344
+    public double angleClock(int hour, int minutes) {
+        // Угол минутной стрелки: 1 минута = 6 градусов (360 / 60)
+        double minuteAngle = minutes * 6.0;
+        
+        // Угол часовой стрелки: 1 час = 30 градусов (360 / 12)
+        // Также учитываем смещение часовой стрелки в зависимости от минут: 30 / 60 = 0.5 градуса
+        double hourAngle = (hour % 12 + minutes / 60.0) * 30.0;
+        
+        // Находим абсолютную разницу между углами
+        double diff = Math.abs(hourAngle - minuteAngle);
+        
+        // Находим меньший угол
+        return Math.min(diff, 360.0 - diff);
+    }
+}
