@@ -1,0 +1,54 @@
+import java.util.*;
+//task 1840
+class Solution {
+    public int maxBuilding(int n, int[][] restrictions) {
+        // Добавляем обязательные ограничения (включая концы)
+        List<int[]> list = new ArrayList<>();
+        list.addAll(Arrays.asList(restrictions));
+        list.add(new int[]{1, 0});
+        
+        // Если конечного здания нет в ограничениях, добавим его
+        boolean hasLast = false;
+        for (int[] r : restrictions) {
+            if (r[0] == n) hasLast = true;
+        }
+        if (!hasLast) {
+            list.add(new int[]{n, n - 1});
+        }
+        
+        // Сортируем ограничения по возрастанию индексов зданий
+        Collections.sort(list, (a, b) -> a[0] - b[0]);
+        
+        int m = list.size();
+        
+        // Прямой проход (слева направо)
+        for (int i = 1; i < m; i++) {
+            int[] prev = list.get(i - 1);
+            int[] curr = list.get(i);
+            curr[1] = Math.min(curr[1], prev[1] + curr[0] - prev[0]);
+        }
+        
+        // Обратный проход (справа налево)
+        for (int i = m - 2; i >= 0; i--) {
+            int[] next = list.get(i + 1);
+            int[] curr = list.get(i);
+            curr[1] = Math.min(curr[1], next[1] + next[0] - curr[0]);
+        }
+        
+        // Вычисление максимального пика между всеми ограничениями
+        int maxHeight = 0;
+        for (int i = 1; i < m; i++) {
+            int[] prev = list.get(i - 1);
+            int[] curr = list.get(i);
+            
+            int pos1 = prev[0], h1 = prev[1];
+            int pos2 = curr[0], h2 = curr[1];
+            
+            // Расчет максимальной высоты в промежутке
+            int curMax = Math.max(h1, h2) + (Math.abs(pos2 - pos1) - Math.abs(h1 - h2)) / 2;
+            maxHeight = Math.max(maxHeight, curMax);
+        }
+        
+        return maxHeight;
+    }
+}
