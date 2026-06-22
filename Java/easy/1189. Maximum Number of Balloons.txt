@@ -1,0 +1,20 @@
+class Solution { //task 1189
+    public int maxNumberOfBalloons(String text) {
+        int[] counts = new int[26];
+        
+        // Подсчитываем каждую букву в тексте
+        for (char c : text.toCharArray()) {
+            counts[c - 'a']++;
+        }
+        
+        // Слово "balloon" требует букв: b, a, l(2), o(2), n
+        int minB = counts['b' - 'a'];
+        int minA = counts['a' - 'a'];
+        int minL = counts['l' - 'a'] / 2;
+        int minO = counts['o' - 'a'] / 2;
+        int minN = counts['n' - 'a'];
+        
+        // Возвращаем минимальное количество раз, которое мы можем собрать слово
+        return Math.min(minB, Math.min(minA, Math.min(minL, Math.min(minO, minN))));
+    }
+}
