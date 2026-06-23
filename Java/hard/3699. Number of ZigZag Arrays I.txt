@@ -1,0 +1,50 @@
+class Solution { //task 3699
+    public int zigZagArrays(int n, int l, int r) {
+        int mod = 1_000_000_007;
+        int m = r - l + 1;
+        
+        // up[i] - количество массивов, где последнее число меньше предыдущего (шаг ВВЕРХ)
+        // down[i] - количество массивов, где последнее число больше предыдущего (шаг ВНИЗ)
+        long[] up = new long[m];
+        long[] down = new long[m];
+        
+        // Базовый случай для длины 1
+        for (int i = 0; i < m; i++) {
+            up[i] = 1;
+            down[i] = 1;
+        }
+        
+        // Динамическое программирование по длине массива
+        for (int len = 2; len <= n; len++) {
+            long[] nextUp = new long[m];
+            long[] nextDown = new long[m];
+            
+            // Префиксная сумма для перехода в состояние UP
+            // Текущий элемент i требует, чтобы предыдущий элемент j был строго меньше i (j < i)
+            long runDown = 0;
+            for (int i = 0; i < m; i++) {
+                nextUp[i] = runDown;
+                runDown = (runDown + down[i]) % mod;
+            }
+            
+            // Суффиксная сумма для перехода в состояние DOWN
+            // Текущий элемент i требует, чтобы предыдущий элемент j был строго больше i (j > i)
+            long runUp = 0;
+            for (int i = m - 1; i >= 0; i--) {
+                nextDown[i] = runUp;
+                runUp = (runUp + up[i]) % mod;
+            }
+            
+            up = nextUp;
+            down = nextDown;
+        }
+        
+        // Подсчет финального ответа для длины n
+        long total = 0;
+        for (int i = 0; i < m; i++) {
+            total = (total + up[i] + down[i]) % mod;
+        }
+        
+        return (int) total;
+    }
+}
