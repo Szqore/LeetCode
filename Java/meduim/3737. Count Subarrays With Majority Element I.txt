@@ -1,0 +1,22 @@
+class Solution { //task 3737
+    public int countMajoritySubarrays(int[] nums, int target) {
+        int count = 0;
+        int n = nums.length;
+        
+        for (int i = 0; i < n; i++) {
+            int targetFreq = 0;
+            for (int j = i; j < n; j++) {
+                if (nums[j] == target) {
+                    targetFreq++;
+                }
+                
+                int subarrayLength = j - i + 1;
+                if (targetFreq > subarrayLength / 2) {
+                    count++;
+                }
+            }
+        }
+        
+        return count;
+    }
+}
