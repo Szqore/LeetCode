@@ -1,0 +1,38 @@
+import java.util.HashMap;
+import java.util.Map;
+//task 3739
+class Solution {
+    public long countMajoritySubarrays(int[] nums, int target) {
+        int n = nums.length;
+        Map<Integer, Integer> countMap = new HashMap<>();
+        countMap.put(0, 1);
+        
+        int currentSum = 0;
+        long ans = 0;
+        
+        // Переменная для быстрого вычисления количества меньших сумм
+        long validPairs = 0; 
+        
+        for (int i = 0; i < n; i++) {
+            int prevSum = currentSum;
+            
+            if (nums[i] == target) {
+                currentSum += 1;
+                // При увеличении currentSum на 1, количество старых префиксных сумм,
+                // которые меньше НОВОГО currentSum, увеличивается на количество 
+                // элементов, равных СТАРОМУ currentSum.
+                validPairs += countMap.getOrDefault(prevSum, 0);
+            } else {
+                currentSum -= 1;
+                // При уменьшении currentSum на 1, количество меньших префиксных сумм
+                // уменьшается на количество элементов, равных НОВOMU currentSum.
+                validPairs -= countMap.getOrDefault(currentSum, 0);
+            }
+            
+            ans += validPairs;
+            countMap.put(currentSum, countMap.getOrDefault(currentSum, 0) + 1);
+        }
+        
+        return ans;
+    }
+}
