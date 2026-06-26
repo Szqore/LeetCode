@@ -1,0 +1,104 @@
+public class Solution {
+    private static final int MOD = 1_000_000_007;
+//task 3700
+    // Переименовано с countZigZagArrays на zigZagArrays
+    public int zigZagArrays(int n, int l, int r) {
+        if (n == 1) {
+            return r - l + 1;
+        }
+        
+
+
+        
+        int m = r - l + 1;
+        int size = 2 * m;
+        
+        // Матрица переходов размера 2M x 2M
+        // Индексы 0..m-1: последнее движение было ВНИЗ к числу (l + i)
+        // Индексы m..2m-1: последнее движение было ВВЕРХ к числу (l + i - m)
+        long[][] transition = new long[size][size];
+        
+        for (int i = 0; i < m; i++) {
+            // Текущее состояние: пришли ВНИЗ к числу i
+            // Следующий шаг обязан быть ВВЕРХ к числу j (где j > i)
+            for (int j = i + 1; j < m; j++) {
+                transition[m + j][i] = 1; 
+            }
+            
+            // Текущее состояние: пришли ВВЕРХ к числу i
+            // Следующий шаг обязан быть ВНИЗ к числу j (где j < i)
+            for (int j = 0; j < i; j++) {
+                transition[j][m + i] = 1;
+            }
+        }
+        
+        // Возводим матрицу переходов в степень (n - 2)
+        long[][] finalMatrix = matrixPower(transition, n - 2, size);
+        
+        // Начальный вектор (массивы длины 2):
+        // Любая корректная пара (x, y) дает ровно 1 вариант
+        long[] initial = new long[size];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < m; j++) {
+                if (i < j) {
+                    // x < y, движение ВВЕРХ к j
+                    initial[m + j]++;
+                } else if (i > j) {
+                    // x > y, движение ВНИЗ к j
+                    initial[j]++;
+                }
+            }
+        }
+        
+        // Умножаем результирующую матрицу на начальный вектор
+        long totalCount = 0;
+        if (n == 2) {
+            for (long val : initial) {
+                totalCount = (totalCount + val) % MOD;
+            }
+            return (int) totalCount;
+        }
+        
+        long[] resultVector = new long[size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                resultVector[i] = (resultVector[i] + finalMatrix[i][j] * initial[j]) % MOD;
+            }
+            totalCount = (totalCount + resultVector[i]) % MOD;
+        }
+        
+        return (int) totalCount;
+    }
+    
+    // Быстрое возведение матрицы в степень
+    private long[][] matrixPower(long[][] base, int exp, int size) {
+        long[][] res = new long[size][size];
+        for (int i = 0; i < size; i++) {
+            res[i][i] = 1; // Единичная матрица
+        }
+        
+        long[][] curr = base;
+        while (exp > 0) {
+            if ((exp & 1) == 1) {
+                res = multiplyMatrices(res, curr, size);
+            }
+            curr = multiplyMatrices(curr, curr, size);
+            exp >>= 1;
+        }
+        return res;
+    }
+    
+    // Перемножение двух матриц по модулю
+    private long[][] multiplyMatrices(long[][] a, long[][] b, int size) {
+        long[][] c = new long[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int k = 0; k < size; k++) {
+                if (a[i][k] == 0) continue;
+                for (int j = 0; j < size; j++) {
+                    c[i][j] = (c[i][j] + a[i][k] * b[k][j]) % MOD;
+                }
+            }
+        }
+        return c;
+    }
+}
