@@ -1,0 +1,20 @@
+import java.util.Arrays;
+//task 1846
+class Solution {
+    public int maximumElementAfterDecrementingAndRearranging(int[] arr) {
+        // Сортируем массив по возрастанию
+        Arrays.sort(arr);
+        
+        // Первый элемент всегда должен быть равен 1
+        arr[0] = 1;
+        
+        // Жадная проверка остальных элементов
+        for (int i = 1; i < arr.length; i++) {
+            // Текущий элемент не должен превышать (предыдущий + 1)
+            arr[i] = Math.min(arr[i], arr[i - 1] + 1);
+        }
+        
+        // Последний элемент массива будет максимальным
+        return arr[arr.length - 1];
+    }
+}
