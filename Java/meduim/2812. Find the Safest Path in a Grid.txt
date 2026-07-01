@@ -1,0 +1,80 @@
+import java.util.*;
+//task 2812
+class Solution {
+    private final int[][] dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+    public int maximumSafenessFactor(List<List<Integer>> grid) {
+        int n = grid.size();
+        Queue<int[]> queue = new LinkedList<>();
+        int[][] dist = new int[n][n];
+
+        for (int[] row : dist) Arrays.fill(row, -1);
+
+        // 1. Многоисточниковый BFS для нахождения расстояния до воров
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid.get(i).get(j) == 1) {
+                    dist[i][j] = 0;
+                    queue.offer(new int[]{i, j});
+                }
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            int[] curr = queue.poll();
+            int r = curr[0], c = curr[1];
+            for (int[] dir : dirs) {
+                int nr = r + dir[0];
+                int nc = c + dir[1];
+                if (nr >= 0 && nr < n && nc >= 0 && nc < n && dist[nr][nc] == -1) {
+                    dist[nr][nc] = dist[r][c] + 1;
+                    queue.offer(new int[]{nr, nc});
+                }
+            }
+        }
+
+        // 2. Бинарный поиск по ответу (коэффициенту безопасности)
+        int left = 0, right = n * 2, ans = 0;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (isValid(dist, mid)) {
+                ans = mid;
+                left = mid + 1; // Пробуем найти более безопасный путь
+            } else {
+                right = mid - 1; // Ищем менее безопасный путь
+            }
+        }
+
+        return ans;
+    }
+
+    private boolean isValid(int[][] dist, int safeness) {
+        int n = dist.length;
+        if (dist[0][0] < safeness || dist[n - 1][n - 1] < safeness) {
+            return false;
+        }
+
+        Queue<int[]> queue = new LinkedList<>();
+        boolean[][] visited = new boolean[n][n];
+        
+        queue.offer(new int[]{0, 0});
+        visited[0][0] = true;
+
+        while (!queue.isEmpty()) {
+            int[] curr = queue.poll();
+            int r = curr[0], c = curr[1];
+
+            if (r == n - 1 && c == n - 1) return true;
+
+            for (int[] dir : dirs) {
+                int nr = r + dir[0];
+                int nc = c + dir[1];
+                if (nr >= 0 && nr < n && nc >= 0 && nc < n && !visited[nr][nc] && dist[nr][nc] >= safeness) {
+                    visited[nr][nc] = true;
+                    queue.offer(new int[]{nr, nc});
+                }
+            }
+        }
+        return false;
+    }
+}
