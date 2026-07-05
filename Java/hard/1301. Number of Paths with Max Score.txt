@@ -1,0 +1,43 @@
+class Solution { //task 1301
+    public int[] pathsWithMaxScore(List<String> board) {
+        int n = board.size();
+        int mod = 1000000007;
+        int[][] dpScore = new int[n][n];
+        int[][] dpPaths = new int[n][n];
+        
+        dpPaths[n - 1][n - 1] = 1;
+        
+        // Обратный проход от правого нижнего угла к левому верхнему
+        for (int r = n - 1; r >= 0; r--) {
+            for (int c = n - 1; c >= 0; c--) {
+                if (board.get(r).charAt(c) == 'X' || dpPaths[r][c] == 0) continue;
+                
+                // Три возможных направления: вверх, влево, по диагонали (вверх-влево)
+                int[][] directions = {{r - 1, c}, {r, c - 1}, {r - 1, c - 1}};
+                
+                for (int[] dir : directions) {
+                    int nr = dir[0];
+                    int nc = dir[1];
+                    
+                    if (nr >= 0 && nc >= 0 && board.get(nr).charAt(nc) != 'X') {
+                        int nextScore = dpScore[r][c] + (nr == 0 && nc == 0 ? 0 : board.get(nr).charAt(nc) - '0');
+                        
+                        if (nextScore > dpScore[nr][nc]) {
+                            dpScore[nr][nc] = nextScore;
+                            dpPaths[nr][nc] = dpPaths[r][c];
+                        } else if (nextScore == dpScore[nr][nc]) {
+                            dpPaths[nr][nc] = (dpPaths[nr][nc] + dpPaths[r][c]) % mod;
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Если до левого верхнего угла дойти невозможно, оба значения будут 0
+        if (dpPaths[0][0] == 0) {
+            return new int[]{0, 0};
+        }
+        
+        return new int[]{dpScore[0][0], dpPaths[0][0]};
+    }
+}
