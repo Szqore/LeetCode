@@ -1,0 +1,19 @@
+class Solution { //task 1288
+    public int removeCoveredIntervals(int[][] intervals) {
+        // Сортировка: по началу по возрастанию, если начала равны - по концу по убыванию
+        Arrays.sort(intervals, (a, b) -> a[0] == b[0] ? b[1] - a[1] : a[0] - b[0]);
+
+        int count = 0;
+        int maxEnd = 0;
+
+        for (int[] interval : intervals) {
+            // Если текущий интервал не покрывается предыдущим
+            if (interval[1] > maxEnd) {
+                count++;
+                maxEnd = interval[1]; // Обновляем максимальную правую границу
+            }
+        }
+
+        return count;
+    }
+}
