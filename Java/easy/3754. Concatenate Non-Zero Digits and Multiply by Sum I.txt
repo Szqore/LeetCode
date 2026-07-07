@@ -1,0 +1,24 @@
+class Solution { //task 3754
+    public long sumAndMultiply(int n) {
+        long totalSum = 0;
+        long x = 0;
+        
+        while (n > 0) {
+            int digit = n % 10;
+            totalSum += digit;
+            if (digit != 0) {
+                x = x * 10 + digit;
+            }
+            n /= 10;
+        }
+        
+        // Перевернуть x, потому что цифры были собраны справа налево
+        long originalX = 0;
+        while (x > 0) {
+            originalX = originalX * 10 + x % 10;
+            x /= 10;
+        }
+        
+        return originalX * totalSum;
+    }
+}
