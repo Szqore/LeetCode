@@ -1,0 +1,55 @@
+class Solution { //task 3756
+    //метода на sumAndMultiply согласно ошибке драйвера
+    public int[] sumAndMultiply(String s, int[][] queries) {
+        int m = s.length();
+        long mod = 1000000007L; // Используем long для исключения переполнения
+
+        // Префиксные массивы для подсчета параметров
+        int[] nonZeroCount = new int[m + 1];
+        long[] sumOfDigits = new long[m + 1];
+        long[] numVal = new long[m + 1];
+
+        long currentSum = 0;
+        long currentNum = 0;
+        int currentNonZeroCount = 0;
+
+        for (int i = 1; i <= m; i++) {
+            int digit = s.charAt(i - 1) - '0';
+            if (digit != 0) {
+                currentNonZeroCount++;
+                currentSum = (currentSum + digit) % mod;
+                currentNum = ((currentNum * 10) % mod + digit) % mod;
+            }
+            nonZeroCount[i] = currentNonZeroCount;
+            sumOfDigits[i] = currentSum;
+            numVal[i] = currentNum;
+        }
+
+        // Предварительный расчет степеней десятки для сдвига разрядов
+        long[] pow10 = new long[m + 1];
+        pow10[0] = 1;
+        for (int i = 1; i <= m; i++) {
+            pow10[i] = (pow10[i - 1] * 10) % mod;
+        }
+
+        int[] ans = new int[queries.length];
+        for (int q = 0; q < queries.length; q++) {
+            int l = queries[q][0];
+            int r = queries[q][1];
+
+            // Находим количество ненулевых цифр в префиксном массиве исходной строки
+            int totalNonZeroLeft = nonZeroCount[l];
+            int totalNonZeroRight = nonZeroCount[r + 1];
+            int nonZeroInQuery = totalNonZeroRight - totalNonZeroLeft;
+
+            long sum = (sumOfDigits[r + 1] - sumOfDigits[l] + mod) % mod;
+            
+            // 2. Исправлено приведение типов: промежуточное вычисление в long, затем явный каст в int
+            long xLong = (numVal[r + 1] - (numVal[l] * pow10[nonZeroInQuery]) % mod + mod) % mod;
+            int x = (int) xLong;
+
+            ans[q] = (int) ((x * sum) % mod);
+        }
+        return ans;
+    }
+}
