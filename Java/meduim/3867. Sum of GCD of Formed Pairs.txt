@@ -1,0 +1,37 @@
+import java.util.Arrays;
+//task 3867
+class Solution {
+    public long gcdSum(int[] nums) {
+        int n = nums.length;
+        int[] prefixGcd = new int[n];
+        int mx = 0;
+        
+        // Шаг 1: Построение массива префиксных GCD
+        for (int i = 0; i < n; i++) {
+            int x = nums[i];
+            mx = Math.max(mx, x);
+            prefixGcd[i] = gcd(x, mx);
+        }
+        
+        // Шаг 2: Сортировка по возрастанию
+        Arrays.sort(prefixGcd);
+        
+        // Шаг 3: Сбор пар с противоположных концов
+        long ans = 0;
+        for (int i = 0; i < n / 2; i++) {
+            ans += gcd(prefixGcd[i], prefixGcd[n - i - 1]);
+        }
+        
+        return ans;
+    }
+    
+    // Вспомогательный метод для нахождения НОД (GCD)
+    private int gcd(int a, int b) {
+        while (b != 0) {
+            int t = a % b;
+            a = b;
+            b = t;
+        }
+        return a;
+    }
+}
