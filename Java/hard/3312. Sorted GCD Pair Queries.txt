@@ -1,0 +1,67 @@
+import java.util.Arrays;
+//task 3312
+public class Solution {
+    public int[] gcdValues(int[] nums, long[] queries) {
+        // Шаг 1: Находим максимальное число в массиве nums
+        int maxVal = 0;
+        for (int num : nums) {
+            maxVal = Math.max(maxVal, num);
+        }
+
+        // Шаг 2: Подсчитываем частоту каждого числа
+        int[] count = new int[maxVal + 1];
+        for (int num : nums) {
+            count[num]++;
+        }
+
+        // Шаг 3: Считаем, сколько чисел делятся на каждое число `i`
+        long[] gcdPairs = new long[maxVal + 1];
+        for (int i = 1; i <= maxVal; i++) {
+            long totalDivisible = 0;
+            for (int j = i; j <= maxVal; j += i) {
+                totalDivisible += count[j];
+            }
+            // Количество пар из элементов, делящихся на `i`
+            gcdPairs[i] = totalDivisible * (totalDivisible - 1) / 2;
+        }
+
+        // Шаг 4: Исключаем избыточные пары (принцип включений-исключений с конца)
+        for (int i = maxVal; i >= 1; i--) {
+            for (int j = 2 * i; j <= maxVal; j += i) {
+                gcdPairs[i] -= gcdPairs[j];
+            }
+        }
+
+        // Шаг 5: Строим массив префиксных сумм
+        long[] prefixSums = new long[maxVal + 1];
+        for (int i = 1; i <= maxVal; i++) {
+            prefixSums[i] = prefixSums[i - 1] + gcdPairs[i];
+        }
+
+        // Шаг 6: Отвечаем на каждый запрос через бинарный поиск
+        int[] answer = new int[queries.length];
+        for (int i = 0; i < queries.length; i++) {
+            answer[i] = binarySearch(prefixSums, queries[i]);
+        }
+
+        return answer;
+    }
+
+    // Бинарный поиск
+    private int binarySearch(long[] prefixSums, long query) {
+        int low = 1;
+        int high = prefixSums.length - 1;
+        int result = high;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (prefixSums[mid] > query) {
+                result = mid; // Потенциальный ответ
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return result;
+    }
+}
