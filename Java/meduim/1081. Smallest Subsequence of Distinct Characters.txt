@@ -1,0 +1,44 @@
+class Solution { //task 1081
+    public String smallestSubsequence(String s) {
+        // Массив для хранения последнего индекса каждого символа
+        int[] lastIndex = new int[26];
+        for (int i = 0; i < s.length(); i++) {
+            lastIndex[s.charAt(i) - 'a'] = i;
+        }
+
+        // Массив для отслеживания символов, которые уже находятся в стеке
+        boolean[] seen = new boolean[26];
+        
+        // Буфер для реализации стека (используем StringBuilder для удобства сборки строки)
+        StringBuilder stack = new StringBuilder();
+
+        for (int i = 0; i < s.length(); i++) {
+            char curr = s.charAt(i);
+            int currIdx = curr - 'a';
+
+            // Если символ уже в стеке, пропускаем его
+            if (seen[currIdx]) {
+                continue;
+            }
+
+            // Удаляем символы из стека, если:
+            // 1. Стек не пуст
+            // 2. Последний символ в стеке лексикографически больше текущего
+            // 3. Этот символ еще встретится дальше в строке
+            while (stack.length() > 0 && stack.charAt(stack.length() - 1) > curr 
+                   && lastIndex[stack.charAt(stack.length() - 1) - 'a'] > i) {
+                
+                // Помечаем удаляемый символ как "не посещенный"
+                seen[stack.charAt(stack.length() - 1) - 'a'] = false;
+                // Удаляем из стека
+                stack.deleteCharAt(stack.length() - 1);
+            }
+
+            // Добавляем текущий символ в стек и отмечаем его как посещенный
+            stack.append(curr);
+            seen[currIdx] = true;
+        }
+
+        return stack.toString();
+    }
+}
