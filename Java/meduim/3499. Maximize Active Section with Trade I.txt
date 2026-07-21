@@ -1,0 +1,39 @@
+import java.util.ArrayList;
+import java.util.List;
+//task 3499
+class Solution {
+    public int maxActiveSectionsAfterTrade(String s) {
+        int n = s.length();
+        int totalOnes = 0;
+        
+        // Списки для хранения типов блоков и их длин
+        List<Character> types = new ArrayList<>();
+        List<Integer> lengths = new ArrayList<>();
+        
+        int i = 0;
+        while (i < n) {
+            int j = i;
+            while (j < n && s.charAt(j) == s.charAt(i)) {
+                j++;
+            }
+            int len = j - i;
+            if (s.charAt(i) == '1') {
+                totalOnes += len;
+            }
+            types.add(s.charAt(i));
+            lengths.add(len);
+            i = j;
+        }
+        
+        int maxGain = 0;
+        // Ищем блоки '1', у которых есть соседи '0' как слева, так и справа
+        for (int k = 1; k < types.size() - 1; k++) {
+            if (types.get(k) == '1' && types.get(k - 1) == '0' && types.get(k + 1) == '0') {
+                int gain = lengths.get(k - 1) + lengths.get(k + 1);
+                maxGain = Math.max(maxGain, gain);
+            }
+        }
+        
+        return totalOnes + maxGain;
+    }
+}
