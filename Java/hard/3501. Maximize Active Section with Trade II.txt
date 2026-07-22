@@ -1,0 +1,164 @@
+import java.util.*;
+//task 3501
+public class Solution {
+    // Класс для хранения информации о непрерывном блоке нулей
+    static class Group {
+        int start;   // Начальный индекс блока в исходной строке
+        int end;     // Конечный индекс блока в исходной строке
+        int length;  // Длина этого блока нулей
+
+        Group(int start, int end, int length) {
+            this.start = start;
+            this.end = end;
+            this.length = length;
+        }
+    }
+
+    // Разреженная таблица (Sparse Table) для RMQ за O(1)
+    static class SparseTable {
+        private final int[][] st;
+
+        public SparseTable(int[] nums) {
+            int n = nums.length;
+            if (n == 0) {
+                st = new int[0][0];
+                return;
+            }
+            int maxLog = 32 - Integer.numberOfLeadingZeros(n);
+            st = new int[maxLog][n];
+            // ИСПРАВЛЕНО: Копируем в строку st[0], а не в сам двумерный массив st
+            System.arraycopy(nums, 0, st[0], 0, n);
+
+            for (int i = 1; i < maxLog; i++) {
+                for (int j = 0; j + (1 << i) <= n; j++) {
+                    st[i][j] = Math.max(st[i - 1][j], st[i - 1][j + (1 << (i - 1))]);
+                }
+            }
+        }
+
+        public int query(int l, int r) {
+            if (l > r) return 0;
+            int i = 31 - Integer.numberOfLeadingZeros(r - l + 1);
+            return Math.max(st[i][l], st[i][r - (1 << i) + 1]);
+        }
+    }
+
+    public List<Integer> maxActiveSectionsAfterTrade(String s, int[][] queries) {
+        int n = s.length();
+        
+        // Считаем изначальное количество единиц в строке
+        int ones = 0;
+        for (int i = 0; i < n; i++) {
+            if (s.charAt(i) == '1') ones++;
+        }
+
+        // Выделяем группы нулей
+        List<Group> zeroGroups = new ArrayList<>();
+        int[] zeroGroupIndex = new int[n];
+        Arrays.fill(zeroGroupIndex, -1);
+
+        int start = -1;
+        for (int i = 0; i < n; i++) {
+            if (s.charAt(i) == '0') {
+                if (start == -1) {
+                    start = i;
+                }
+            } else {
+                if (start != -1) {
+                    zeroGroups.add(new Group(start, i - 1, i - start));
+                    start = -1;
+                }
+            }
+        }
+        if (start != -1) {
+            zeroGroups.add(new Group(start, n - 1, n - start));
+        }
+
+        int m = zeroGroups.size();
+        
+        // Заполняем индексные массивы для быстрого поиска групп
+        for (int i = 0; i < m; i++) {
+            Group g = zeroGroups.get(i);
+            for (int j = g.start; j <= g.end; j++) {
+                zeroGroupIndex[j] = i;
+            }
+        }
+
+        // Указатель на первую группу, начинающуюся на индексе >= i
+        int[] nextGroup = new int[n];
+        int ptr = 0;
+        for (int i = 0; i < n; i++) {
+            while (ptr < m && zeroGroups.get(ptr).start < i) {
+                ptr++;
+            }
+            nextGroup[i] = ptr;
+        }
+
+        // Указатель на последнюю группу, заканчивающуюся на индексе <= i
+        int[] prevGroup = new int[n];
+        ptr = m - 1;
+        for (int i = n - 1; i >= 0; i--) {
+            while (ptr >= 0 && zeroGroups.get(ptr).end > i) {
+                ptr--;
+            }
+            prevGroup[i] = ptr;
+        }
+
+        List<Integer> ans = new ArrayList<>(queries.length);
+
+        if (zeroGroups.isEmpty()) {
+            for (int i = 0; i < queries.length; i++) {
+                ans.add(ones);
+            }
+            return ans;
+        }
+
+        // Массив сумм длин соседних пар блоков нулей
+        int[] zeroMergeLengths = new int[Math.max(0, m - 1)];
+        for (int i = 0; i < m - 1; i++) {
+            zeroMergeLengths[i] = zeroGroups.get(i).length + zeroGroups.get(i + 1).length;
+        }
+
+        // Строим Разреженную Таблицу по парам
+        SparseTable st = new SparseTable(zeroMergeLengths);
+
+        // Обрабатываем запросы
+        for (int q = 0; q < queries.length; q++) {
+            int l = queries[q][0];
+            int r = queries[q][1];
+
+            int maxGain = 0;
+
+            // Случай 1: Проверяем группу, в которую входит левая граница 'l'
+            if (s.charAt(l) == '0') {
+                int idx = zeroGroupIndex[l];
+                if (idx + 1 < m && zeroGroups.get(idx + 1).start <= r) {
+                    int leftLen = zeroGroups.get(idx).end - l + 1;
+                    int rightLen = Math.min(zeroGroups.get(idx + 1).end, r) - zeroGroups.get(idx + 1).start + 1;
+                    maxGain = Math.max(maxGain, leftLen + rightLen);
+                }
+            }
+
+            // Случай 2: Проверяем группу, в которую входит правая граница 'r'
+            if (s.charAt(r) == '0') {
+                int idx = zeroGroupIndex[r];
+                if (idx - 1 >= 0 && zeroGroups.get(idx - 1).end >= l) {
+                    int leftLen = zeroGroups.get(idx - 1).end - Math.max(zeroGroups.get(idx - 1).start, l) + 1;
+                    int rightLen = r - zeroGroups.get(idx).start + 1;
+                    maxGain = Math.max(maxGain, leftLen + rightLen);
+                }
+            }
+
+            // Случай 3: Ищем полностью вошедшие пары блоков нулей через Sparse Table
+            int firstFullyContained = nextGroup[l];
+            int lastFullyContained = prevGroup[r];
+            if (firstFullyContained <= lastFullyContained - 1) {
+                maxGain = Math.max(maxGain, st.query(firstFullyContained, lastFullyContained - 1));
+            }
+
+            ans.add(ones + maxGain);
+        }
+
+        return ans;
+    }
+}
