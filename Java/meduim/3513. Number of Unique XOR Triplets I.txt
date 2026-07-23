@@ -1,0 +1,19 @@
+class Solution { //task 3513
+    public int uniqueXorTriplets(int[] nums) {
+        int n = nums.length;
+        
+        // Если элементов меньше 3, невозможно составить тройку индексов.
+        // В таком случае возвращаем количество элементов n.
+        if (n < 3) {
+            return n;
+        }
+        
+        // Находим длину числа n в битах (позиция старшего значащего бита + 1).
+        // Integer.numberOfLeadingZeros(n) возвращает количество ведущих нулей в 32-битном int.
+        int bitLength = 32 - Integer.numberOfLeadingZeros(n);
+        
+        // Количество уникальных значений XOR равно 2 в степени bitLength.
+        // Используем побитовый сдвиг влево для быстрого возведения двойки в степень.
+        return 1 << bitLength;
+    }
+}
