@@ -1,0 +1,41 @@
+import java.util.*;
+//task 3514
+class Solution {
+    public int uniqueXorTriplets(int[] nums) {
+        // Шаг 1: Находим все уникальные числа в исходном массиве
+        boolean[] seen = new boolean[1501];
+        List<Integer> uniqueVals = new ArrayList<>();
+        for (int num : nums) {
+            if (!seen[num]) {
+                seen[num] = true;
+                uniqueVals.add(num);
+            }
+        }
+        
+        // Шаг 2: Находим все возможные XOR-суммы для ПАР элементов
+        boolean[] has2 = new boolean[2048];
+        for (int i = 0; i < uniqueVals.size(); i++) {
+            for (int j = i; j < uniqueVals.size(); j++) {
+                has2[uniqueVals.get(i) ^ uniqueVals.get(j)] = true;
+            }
+        }
+        
+        // Шаг 3: Объединяем пары с третьим элементом для получения троек
+        boolean[] has3 = new boolean[2048];
+        int uniqueTripletsCount = 0;
+        
+        for (int i = 0; i < 2048; i++) {
+            if (has2[i]) {
+                for (int val : uniqueVals) {
+                    int xor3 = i ^ val;
+                    if (!has3[xor3]) {
+                        has3[xor3] = true;
+                        uniqueTripletsCount++;
+                    }
+                }
+            }
+        }
+        
+        return uniqueTripletsCount;
+    }
+}
