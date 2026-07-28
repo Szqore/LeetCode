@@ -1,0 +1,24 @@
+import java.util.Arrays;
+//task 3517
+public class Solution {
+    public String smallestPalindrome(String s) {
+        int n = s.length();
+        
+        // 1. Берем первую половину строки (округляем вниз)
+        String half = s.substring(0, n / 2);
+        
+        // 2. Сортируем символы первой половины для наименьшего порядка
+        char[] chars = half.toCharArray();
+        Arrays.sort(chars);
+        String sortedHalf = new String(chars);
+        
+        // 3. Выделяем центральный символ, если длина строки нечетная
+        String middle = (n % 2 == 1) ? String.valueOf(s.charAt(n / 2)) : "";
+        
+        // 4. Разворачиваем отсортированную половину для правой части
+        String reversedHalf = new StringBuilder(sortedHalf).reverse().toString();
+        
+        // 5. Собираем итоговый палиндром
+        return sortedHalf + middle + reversedHalf;
+    }
+}
