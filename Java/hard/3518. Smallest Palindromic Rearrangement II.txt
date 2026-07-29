@@ -1,0 +1,111 @@
+import java.math.BigInteger;
+//task 3518
+public class Solution {
+    private double[] logFact; 
+
+    public String smallestPalindrome(String s, long k) {
+        int n = s.length();
+        int[] totalCount = new int[26];
+        
+        for (int i = 0; i < n; i++) {
+            totalCount[s.charAt(i) - 'a']++;
+        }
+        
+        int[] halfCount = new int[26];
+        char midChar = 0;
+        int halfLen = n / 2;
+        
+        for (int i = 0; i < 26; i++) {
+            halfCount[i] = totalCount[i] / 2;
+            if (totalCount[i] % 2 != 0) {
+                midChar = (char) ('a' + i);
+            }
+        }
+        
+        // Инициализируем логарифмы факториалов
+        logFact = new double[halfLen + 1];
+        for (int i = 1; i <= halfLen; i++) {
+            logFact[i] = logFact[i - 1] + Math.log(i);
+        }
+        
+        //существует ли вообще k-я перестановка для текущего halfCount
+        long maxPerms = getExactPerms(halfCount, -1, halfLen);
+        if (k > maxPerms) {
+            return "";
+        }
+        
+        StringBuilder leftHalf = new StringBuilder();
+        int remainingLen = halfLen;
+        
+        for (int pos = 0; pos < halfLen; pos++) {
+            for (int i = 0; i < 26; i++) {
+                if (halfCount[i] > 0) {
+                    // Считаем порядок перестановок через логарифмы
+                    double logPerms = logFact[remainingLen - 1];
+                    for (int j = 0; j < 26; j++) {
+                        int cnt = halfCount[j] - (i == j ? 1 : 0);
+                        logPerms -= logFact[cnt];
+                    }
+                    
+                    if (logPerms > 45) {
+                        // Вариантов слишком много, k точно помещается здесь
+                        leftHalf.append((char) ('a' + i));
+                        halfCount[i]--;
+                        remainingLen--;
+                        break;
+                    } else {
+                        // Считаем точное значение
+                        long perms = getExactPerms(halfCount, i, remainingLen);
+                        if (k <= perms) {
+                            leftHalf.append((char) ('a' + i));
+                            halfCount[i]--;
+                            remainingLen--;
+                            break;
+                        } else {
+                            k -= perms;
+                        }
+                    }
+                }
+            }
+        }
+        
+        String left = leftHalf.toString();
+        String right = leftHalf.reverse().toString();
+        
+        return (n % 2 != 0) ? left + midChar + right : left + right;
+    }
+    
+    private long getExactPerms(int[] halfCount, int current_i, int remainingLen) {
+        int[] tempCount = halfCount.clone();
+        if (current_i != -1) {
+            tempCount[current_i]--;
+            remainingLen--;
+        }
+        
+        if (remainingLen == 0) return 1;
+
+        int maxIdx = 0;
+        for (int j = 1; j < 26; j++) {
+            if (tempCount[j] > tempCount[maxIdx]) {
+                maxIdx = j;
+            }
+        }
+        
+        BigInteger num = BigInteger.ONE;
+        for (int j = tempCount[maxIdx] + 1; j <= remainingLen; j++) {
+            num = num.multiply(BigInteger.valueOf(j));
+        }
+        
+        for (int j = 0; j < 26; j++) {
+            if (j == maxIdx) continue;
+            for (int c = 2; c <= tempCount[j]; c++) {
+                num = num.divide(BigInteger.valueOf(c));
+            }
+        }
+        
+        if (num.compareTo(BigInteger.valueOf(Long.MAX_VALUE)) > 0) {
+            return Long.MAX_VALUE;
+        }
+        return num.longValue();
+    }
+}
