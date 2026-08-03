@@ -1,0 +1,30 @@
+class Solution { //task 1406
+    public String stoneGameIII(int[] stoneValue) {
+        int n = stoneValue.length;
+        int[] dp = new int[n + 1];
+        
+        // Базовый случай: когда камней не осталось, выгода равна 0
+        dp[n] = 0; 
+        
+        // Идем с конца массива к началу
+        for (int i = n - 1; i >= 0; i--) {
+            int take = 0;
+            dp[i] = Integer.MIN_VALUE;
+            
+            // Игрок может взять 1, 2 или 3 камня
+            for (int k = 0; k < 3 && i + k < n; k++) {
+                take += stoneValue[i + k];
+                dp[i] = Math.max(dp[i], take - dp[i + k + 1]);
+            }
+        }
+        
+        // Результат для начальной позиции
+        if (dp[0] > 0) {
+            return "Alice";
+        } else if (dp[0] < 0) {
+            return "Bob";
+        } else {
+            return "Tie";
+        }
+    }
+}
