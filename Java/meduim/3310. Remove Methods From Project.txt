@@ -1,0 +1,55 @@
+import java.util.*;
+//task 3310
+class Solution {
+    // Имя метода изменено на remainingMethods, как требует ваш компилятор
+    public List<Integer> remainingMethods(int n, int k, int[][] invocations) {
+        // 1. Построение графа (списка смежности)
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
+        }
+        for (int[] inv : invocations) {
+            graph.get(inv[0]).add(inv[1]); // inv[0] вызывает inv[1]
+        }
+
+        // 2. Поиск подозрительных методов через BFS
+        boolean[] isSuspicious = new boolean[n];
+        Queue<Integer> queue = new LinkedList<>();
+        
+        queue.offer(k);
+        isSuspicious[k] = true;
+        
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            for (int neighbor : graph.get(current)) {
+                if (!isSuspicious[neighbor]) {
+                    isSuspicious[neighbor] = true;
+                    queue.offer(neighbor);
+                }
+            }
+        }
+
+        // 3. Проверка внешних вызовов (не подозрительный -> подозрительный)
+        for (int[] inv : invocations) {
+            int u = inv[0];
+            int v = inv[1];
+            if (!isSuspicious[u] && isSuspicious[v]) {
+                // Если удаление невозможно, возвращаем все методы
+                List<Integer> allMethods = new ArrayList<>();
+                for (int i = 0; i < n; i++) {
+                    allMethods.add(i);
+                }
+                return allMethods;
+            }
+        }
+
+        // 4. Возвращаем только безопасные методы
+        List<Integer> remaining = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (!isSuspicious[i]) {
+                remaining.add(i);
+            }
+        }
+        return remaining;
+    }
+}
