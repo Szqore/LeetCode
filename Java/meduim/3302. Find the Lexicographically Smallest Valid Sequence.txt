@@ -1,0 +1,48 @@
+import java.util.Arrays;
+//task 3302
+public class Solution {
+    public int[] validSequence(String word1, String word2) {
+        int n = word1.length();
+        int m = word2.length();
+        
+        // Массив для хранения крайнего правого индекса в word1,
+        // начиная с которого можно собрать суффикс word2[j...]
+        int[] last = new int[m];
+        Arrays.fill(last, -1);
+        
+        // Шаг 1: Жадный проход с конца (справа налево)
+        int j = m - 1;
+        for (int i = n - 1; i >= 0 && j >= 0; i--) {
+            if (word1.charAt(i) == word2.charAt(j)) {
+                last[j] = i;
+                j--;
+            }
+        }
+        
+        int[] ans = new int[m];
+        boolean canSkip = true; // Флаг, позволяющий сделать 1 изменение
+        j = 0;
+        
+        // Шаг 2: Жадный проход с начала для минимизации индексов
+        for (int i = 0; i < n && j < m; i++) {
+            if (word1.charAt(i) == word2.charAt(j)) {
+                ans[j] = i;
+                j++;
+            } else if (canSkip && (j == m - 1 || i < last[j + 1])) {
+                // Если символы не равны, но мы можем использовать замену:
+                // Условие 'i < last[j + 1]' гарантирует, что оставшийся суффикс
+                // word2[j+1...] гарантированно соберется дальше в word1
+                canSkip = false;
+                ans[j] = i;
+                j++;
+            }
+        }
+        
+        // Если удалось собрать всю строку word2
+        if (j == m) {
+            return ans;
+        }
+        
+        return new int[0];
+    }
+}
