@@ -1,0 +1,54 @@
+import java.util.Arrays;
+//task 1140
+public class Solution {
+    private int[] suffixSums;
+    private int[][] memo;
+
+    public int stoneGameII(int[] piles) {
+        int n = piles.length;
+        
+        // suffixSums[i] хранит общее количество камней от позиции i до конца
+        suffixSums = new int[n + 1];
+        for (int i = n - 1; i >= 0; i--) {
+            suffixSums[i] = suffixSums[i + 1] + piles[i];
+        }
+        
+        // Матрица для мемоизации: memo[index][M]
+        // Максимальное значение M не превысит n, поэтому размер n + 1 достаточен
+        memo = new int[n][n + 1];
+        for (int[] row : memo) {
+            Arrays.fill(row, -1);
+        }
+        
+        return dfs(0, 1, n);
+    }
+
+    private int dfs(int i, int M, int n) {
+        // Если дошли до конца массива, камней больше нет
+        if (i >= n) {
+            return 0;
+        }
+        
+        // Если текущее M позволяет забрать все оставшиеся кучи
+        if (i + 2 * M >= n) {
+            return suffixSums[i];
+        }
+        
+        // Возвращаем уже вычисленное значение
+        if (memo[i][M] != -1) {
+            return memo[i][M];
+        }
+        
+        int minOpponentStones = Integer.MAX_VALUE;
+        
+        // Перебираем все возможные ходы X от 1 до 2 * M
+        for (int x = 1; x <= 2 * M; x++) {
+            // Следующий игрок максимизирует свои камни, минимизируя наши
+            minOpponentStones = Math.min(minOpponentStones, dfs(i + x, Math.max(M, x), n));
+        }
+        
+        // Камни Алисы = все оставшиеся камни минус камни, которые наберет Боб
+        memo[i][M] = suffixSums[i] - minOpponentStones;
+        return memo[i][M];
+    }
+}
