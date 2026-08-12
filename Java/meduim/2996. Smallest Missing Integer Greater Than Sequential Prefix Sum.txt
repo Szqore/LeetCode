@@ -1,0 +1,30 @@
+import java.util.HashSet;
+import java.util.Set;
+//task 2996
+public class Solution {
+    public int missingInteger(int[] nums) {
+        //  берем именно первый элемент nums[0], а не весь массив nums
+        int sum = nums[0]; 
+        
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] == nums[i - 1] + 1) {
+                sum += nums[i];
+            } else {
+                break; // Последовательный префикс закончился
+            }
+        }
+        
+        // Кэшируем элементы в Set для быстрого поиска за O(1)
+        Set<Integer> numSet = new HashSet<>();
+        for (int num : nums) {
+            numSet.add(num);
+        }
+        
+        // Ищем наименьшее пропущенное число
+        while (numSet.contains(sum)) {
+            sum++;
+        }
+        
+        return sum;
+    }
+}
