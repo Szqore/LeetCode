@@ -1,0 +1,108 @@
+class Solution { //task 2213
+    static class Node {
+        int maxLen;
+        int prefLen;
+        int suffLen;
+        char prefChar;
+        char suffChar;
+        int length; // Общая длина отрезка, за который отвечает узел
+
+        Node(char c) {
+            this.maxLen = 1;
+            this.prefLen = 1;
+            this.suffLen = 1;
+            this.prefChar = c;
+            this.suffChar = c;
+            this.length = 1;
+        }
+
+        Node() {}
+    }
+
+    private Node[] tree;
+    private char[] sChars;
+
+    public int[] longestRepeating(String s, String queryCharacters, int[] queryIndices) {
+        int n = s.length();
+        sChars = s.toCharArray();
+        tree = new Node[4 * n];
+        
+        buildTree(1, 0, n - 1);
+
+        int k = queryIndices.length;
+        int[] result = new int[k];
+
+        for (int i = 0; i < k; i++) {
+            int idx = queryIndices[i];
+            char c = queryCharacters.charAt(i);
+            
+            updateTree(1, 0, n - 1, idx, c);
+            result[i] = tree[1].maxLen; // Корень всегда хранит ответ для всей строки
+        }
+
+        return result;
+    }
+
+    private void buildTree(int node, int start, int end) {
+        if (start == end) {
+            tree[node] = new Node(sChars[start]);
+            return;
+        }
+
+        int mid = start + (end - start) / 2;
+        buildTree(2 * node, start, mid);
+        buildTree(2 * node + 1, mid + 1, end);
+        
+        tree[node] = merge(tree[2 * node], tree[2 * node + 1]);
+    }
+
+    private void updateTree(int node, int start, int end, int idx, char c) {
+        if (start == end) {
+            sChars[idx] = c;
+            tree[node] = new Node(c);
+            return;
+        }
+
+        int mid = start + (end - start) / 2;
+        if (idx <= mid) {
+            updateTree(2 * node, start, mid, idx, c);
+        } else {
+            updateTree(2 * node + 1, mid + 1, end, idx, c);
+        }
+
+        tree[node] = merge(tree[2 * node], tree[2 * node + 1]);
+    }
+
+    // Логика объединения двух соседних узлов (левого и правого)
+    private Node merge(Node left, Node right) {
+        Node parent = new Node();
+        parent.length = left.length + right.length;
+        
+        // Наследуем крайние символы
+        parent.prefChar = left.prefChar;
+        parent.suffChar = right.suffChar;
+        
+        // Базовые значения префикса и суффикса
+        parent.prefLen = left.prefLen;
+        parent.suffLen = right.suffLen;
+        
+        // Базовое значение максимума из двух детей
+        parent.maxLen = Math.max(left.maxLen, right.maxLen);
+
+        // Если символы на стыке левого и правого поддерева совпадают
+        if (left.suffChar == right.prefChar) {
+            // Если левое поддерево целиком состоит из одного символа
+            if (left.prefLen == left.length) {
+                parent.prefLen = left.length + right.prefLen;
+            }
+            // Если правое поддерево целиком состоит из одного символа
+            if (right.suffLen == right.length) {
+                parent.suffLen = right.length + left.suffLen;
+            }
+            // Потенциально новый максимум на стыке
+            parent.maxLen = Math.max(parent.maxLen, left.suffLen + right.prefLen);
+        }
+
+        return parent;
+    }
+}
